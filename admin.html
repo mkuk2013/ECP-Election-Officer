@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECP Mock Test Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Colors & Variables */
+        :root {
+            --primary-color: #007bff; /* A vibrant blue */
+            --primary-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --light-bg: #f5f7fa; /* Lighter background for more freshness */
+            --dark-bg: #1a202c; /* Deeper dark background */
+            --light-text: #2d3748; /* Darker text for readability on light */
+            --dark-text: #e2e8f0; /* Lighter text for readability on dark */
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #2d3748; /* Darker card for contrast */
+            --border-color-light: #e2e8f0;
+            --border-color-dark: #4a5568;
+            --accent-green: #28a745;
+            --accent-green-dark: #218838;
+            --accent-red: #dc3545;
+            --accent-red-dark: #c82333;
+            --accent-yellow: #ffc107;
+            --accent-yellow-dark: #e0a800;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text); /* General dark mode text color for non-table elements */
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.25rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dark-mode .header {
+            background-color: #2c5282;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .card {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--border-color-light);
+            transition: background-color 0.4s ease-in-out, border-color 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+        .dark-mode .card {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--dark-text);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .btn {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+        .dark-mode .btn-primary {
+            background-color: #63b3ed;
+            border-color: #63b3ed;
+            color: #1a202c;
+        }
+        .dark-mode .btn-primary:hover {
+            background-color: #4299e1;
+            border-color: #4299e1;
+        }
+        .btn-danger {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+        .btn-danger:hover {
+            background-color: var(--accent-red-dark);
+            border-color: var(--accent-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        }
+        .dark-mode .btn-danger {
+            background-color: #e53e3e;
+            border-color: #e53e3e;
+        }
+        .dark-mode .btn-danger:hover {
+            background-color: #c53030;
+            border-color: #c53030;
+        }
+        .btn-success {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        .btn-success:hover {
+            background-color: var(--accent-green-dark);
+            border-color: var(--accent-green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+        }
+        .dark-mode .btn-success {
+            background-color: #48bb78;
+            border-color: #48bb78;
+        }
+        .dark-mode .btn-success:hover {
+            background-color: #38a169;
+            border-color: #38a169;
+        }
+
+        /* --- TABLE SPECIFIC DARK MODE STYLES --- */
+        .table {
+            background-color: var(--card-bg-light); /* Stays light for light mode */
+            border-radius: 1rem;
+            overflow: hidden; /* For rounded corners */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: background-color 0.4s ease-in-out;
+        }
+
+        .dark-mode .table {
+            background-color: #2d3748; /* Darker background for the table in dark mode */
+            border: 1px solid white; /* Prominent white border around the entire table */
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: 1px solid var(--border-color-light); /* Light mode internal borders */
+            color: var(--light-text); /* Default text color for light mode */
+        }
+
+        .dark-mode .table th {
+            border-top: 1px solid rgba(255, 255, 255, 0.4); 
+            color: var(--dark-text); /* Keep header text light for contrast with dark header background */
+        }
+
+        /* === IMPORTANT CHANGE HERE: Table Data (td) text color === */
+        .dark-mode .table td {
+            border-top: 1px solid rgba(255, 255, 255, 0.4); 
+            color: black !important; /* Manually set td text to black in dark mode */
+        }
+        /* --- END IMPORTANT CHANGE --- */
+
+        /* Make the Status 'Fail' red and 'Pass' green regardless of mode */
+        .table td.text-danger {
+            color: var(--accent-red) !important; /* !important to override dark-mode .table td color */
+        }
+        .table td.text-success {
+            color: var(--accent-green) !important; /* !important to override dark-mode .table td color */
+        }
+
+
+        .table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: 2px solid var(--primary-hover); /* Light mode header bottom border */
+            cursor: pointer; /* For sortable columns */
+        }
+
+        .dark-mode .table thead th {
+            background-color: #2c5282; /* Darker header background for dark mode */
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6); /* Whiter bottom border for header */
+            color: white; /* Ensure header text is always white */
+        }
+
+        .table tbody tr:hover {
+            background-color: #e9ecef; /* Light mode hover */
+        }
+
+        .dark-mode .table tbody tr:hover {
+            background-color: #4a5568; /* Dark mode hover */
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9; /* Light mode striped rows */
+        }
+
+        .dark-mode .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #3a475a; /* Slightly different dark shade for striped rows */
+        }
+        /* --- END TABLE SPECIFIC DARK MODE STYLES --- */
+
+
+        .form-select {
+            border-radius: 0.75rem;
+            border-color: var(--border-color-light);
+            background-color: var(--card-bg-light);
+            color: var(--light-text);
+        }
+        .dark-mode .form-select {
+            background-color: #4a5568;
+            border-color: #6c757d;
+            color: var(--dark-text);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg-light);
+            margin: auto;
+            padding: 30px;
+            border: 1px solid var(--border-color-light);
+            width: 80%;
+            max-width: 500px;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .dark-mode .modal-content {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--dark-text);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .table-responsive {
+                border: 1px solid var(--border-color-light); /* Light mode outer responsive table border */
+                border-radius: 1rem;
+            }
+            .dark-mode .table-responsive {
+                border: 1px solid rgba(255, 255, 255, 0.4); /* Dark mode outer responsive table border */
+            }
+            .table thead {
+                display: none; /* Hide table headers on small screens */
+            }
+            .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+            .table tr {
+                margin-bottom: 0.8rem;
+                border: 1px solid var(--border-color-light); /* Light mode responsive row border */
+                border-radius: 0.75rem;
+                padding: 1rem;
+            }
+            .dark-mode .table tr {
+                border: 1px solid rgba(255, 255, 255, 0.4); /* Dark mode responsive row border */
+            }
+            .table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: var(--primary-color); /* Light mode responsive label color */
+            }
+            .dark-mode .table td::before {
+                color: #63b3ed; /* Dark mode responsive label color */
+            }
+            .pagination-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header class="header sticky-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-4 py-3">
+            <h1 class="text-2xl md:text-3xl font-bold">ECP Mock Test Admin Panel</h1>
+            <button id="themeToggle" class="btn btn-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-moon me-2" id="themeIcon"></i> <span class="d-none d-md-inline">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="container-fluid py-5 flex-grow-1">
+        <section id="adminLoginSection" class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-sm-8">
+                <div class="card p-5 shadow-xl">
+                    <h2 class="text-center text-3xl font-extrabold mb-6">Admin Login</h2>
+                    <form id="adminLoginForm">
+                        <div class="mb-4">
+                            <label for="adminEmail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="adminEmail" placeholder="Enter admin email" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="adminPassword" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="adminPassword" placeholder="Enter password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3 text-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </button>
+                        <p id="loginError" class="text-danger mt-3 text-center d-none">Invalid email or password.</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="adminDashboardSection" class="d-none">
+            <div class="card p-5 shadow-xl">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-3xl font-extrabold">Test Results Overview</h2>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button id="refreshDataBtn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt me-2"></i> Refresh Data
+                        </button>
+                        <button id="printPdfDataBtn" class="btn btn-info">
+                            <i class="fas fa-print me-2"></i> Print PDF
+                        </button>
+                        <button id="deleteAllBtn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt me-2"></i> Delete All
+                        </button>
+                        <button id="deleteSelectedBtn" class="btn btn-danger" disabled>
+                            <i class="fas fa-minus-circle me-2"></i> Delete Selected
+                        </button>
+                        <button id="logoutBtn" class="btn btn-secondary">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4 d-flex flex-wrap gap-3 align-items-center">
+                    <div>
+                        <label for="rowsPerPage" class="form-label mb-0 me-2">Rows per page:</label>
+                        <select id="rowsPerPage" class="form-select d-inline-block w-auto">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
+                        <label class="form-check-label" for="selectAllCheckbox">Select All</label>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" data-sort="name">Name <i class="fas fa-sort float-end"></i></th>
+                                <th scope="col" data-sort="email">Email <i class="fas fa-sort float-end"></i></th>
+                                <th scope="col" data-sort="score">Score <i class="fas fa-sort float-end"></i></th>
+                                <th scope="col" data-sort="status">Status <i class="fas fa-sort float-end"></i></th>
+                                <th scope="col" data-sort="timestamp">Date <i class="fas fa-sort float-end"></i></th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testResultsTableBody">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 pagination-controls flex-wrap">
+                    <p class="mb-0">Showing <span id="currentPageStart">0</span> to <span id="currentPageEnd">0</span> of <span id="totalRecords">0</span> records</p>
+                    <nav>
+                        <ul class="pagination mb-0">
+                            <li class="page-item" id="prevPageBtn"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item" id="nextPageBtn"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer mt-auto bg-light text-center text-sm py-3">
+        <div class="container-fluid text-center text-sm py-3">
+            <p class="mb-0">&copy; 2024 ECP Mock Test Admin. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="universalMessageModal" class="modal" tabindex="-1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-3xl font-bold w-100" id="universalModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="universalModalBody" class=""></p>
+            </div>
+            <div class="modal-footer">
+                <button id="universalModalCloseBtn" class="btn btn-primary">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-functions-compat.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script> <script>
+        // --- Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG) ---
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyARioi_SsJ036uPaozAffshFwo0BEIVGls",
+  authDomain: "ecp-mocktest.firebaseapp.com",
+  projectId: "ecp-mocktest",
+  storageBucket: "ecp-mocktest.firebasestorage.app",
+  messagingSenderId: "93126984229",
+  appId: "1:93126984229:web:80f32bcfd73b7ded74b5cc",
+  measurementId: "G-Y2XKSLJH2F"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const functions = firebase.functions(); // Initialize Firebase Functions
+
+        // Admin Panel Elements
+        const adminLoginSection = $('#adminLoginSection');
+        const adminDashboardSection = $('#adminDashboardSection');
+        const adminLoginForm = $('#adminLoginForm');
+        const loginError = $('#loginError');
+        const testResultsTableBody = $('#testResultsTableBody');
+        const refreshDataBtn = $('#refreshDataBtn');
+        const printPdfDataBtn = $('#printPdfDataBtn');
+        const deleteAllBtn = $('#deleteAllBtn');
+        const deleteSelectedBtn = $('#deleteSelectedBtn');
+        const logoutBtn = $('#logoutBtn');
+        const rowsPerPageSelect = $('#rowsPerPage');
+        const selectAllCheckbox = $('#selectAllCheckbox');
+        const currentPageStartSpan = $('#currentPageStart');
+        const currentPageEndSpan = $('#currentPageEnd');
+        const totalRecordsSpan = $('#totalRecords');
+        const prevPageBtn = $('#prevPageBtn');
+        const nextPageBtn = $('#nextPageBtn');
+
+        // Universal Modal
+        const universalMessageModal = $('#universalMessageModal');
+        const universalModalTitle = $('#universalModalTitle');
+        const universalModalBody = $('#universalModalBody');
+        const universalModalCloseBtn = $('#universalModalCloseBtn');
+
+        let allTestResults = []; // Stores all fetched data
+        let currentSortedColumn = null;
+        let currentSortDirection = 'asc'; // 'asc' or 'desc'
+        let currentPage = 1;
+        let rowsPerPage = 10; // Default
+
+        // Function to display a custom modal message
+        function showCustomModal(title, message, onCloseCallback = null, showCloseButton = true) {
+            universalModalTitle.text(title);
+            universalModalBody.html(message);
+            universalMessageModal.css('display', 'flex');
+
+            if (showCloseButton) {
+                universalModalCloseBtn.show();
+                universalModalCloseBtn.off('click').on('click', function() {
+                    universalMessageModal.css('display', 'none');
+                    if (onCloseCallback) {
+                        onCloseCallback();
+                    }
+                });
+            } else {
+                universalModalCloseBtn.hide();
+            }
+        }
+
+        // Dark/Light Mode Toggle
+        $('#themeToggle').on('click', function() {
+            $('body').toggleClass('dark-mode');
+            const themeIcon = $('#themeIcon');
+            const currentThemeText = $(this).find('span');
+            if ($('body').hasClass('dark-mode')) {
+                themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                currentThemeText.text('Light Mode');
+            } else {
+                themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                currentThemeText.text('Dark Mode');
+            }
+        });
+
+        // --- Firebase Authentication Check ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in.
+                // IMPORTANT: In a real app, you'd verify admin role using custom claims
+                // or a separate Firestore 'admins' collection read server-side.
+                // For this example, we'll assume any logged-in user to this panel is an admin
+                // (BUT DO NOT DO THIS IN PRODUCTION WITHOUT PROPER ROLE CHECKING!)
+                adminLoginSection.addClass('d-none');
+                adminDashboardSection.removeClass('d-none');
+                loadTestResults();
+            } else {
+                // No user is signed in. Show login.
+                adminLoginSection.removeClass('d-none');
+                adminDashboardSection.addClass('d-none');
+            }
+        });
+
+        // --- Admin Login ---
+        adminLoginForm.on('submit', async function(e) {
+            e.preventDefault();
+            const email = $('#adminEmail').val();
+            const password = $('#adminPassword').val();
+            loginError.addClass('d-none');
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // On successful login, onAuthStateChanged listener handles showing dashboard
+            } catch (error) {
+                console.error("Login error:", error.message);
+                loginError.text('Invalid email or password.').removeClass('d-none');
+                showCustomModal('Login Failed', `
+                    <p class="text-danger font-semibold mb-3">Login attempt failed. Please check your credentials.</p>
+                    <p>Error: ${error.message}</p>
+                `);
+            }
+        });
+
+        // --- Logout ---
+        logoutBtn.on('click', async function() {
+            try {
+                await auth.signOut();
+                // On successful logout, onAuthStateChanged listener handles showing login
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                showCustomModal('Logout Failed', `
+                    <p class="text-danger font-semibold mb-3">Failed to log out.</p>
+                    <p>Error: ${error.message}</p>
+                `);
+            }
+        });
+
+        // --- Load Test Results (Data Fetching) ---
+        async function loadTestResults() {
+            testResultsTableBody.empty().append('<tr><td colspan="7" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> Loading data...</td></tr>');
+            try {
+                // IMPORTANT: For production, this fetch should go through a Cloud Function
+                // that authenticates the admin. Directly reading all documents client-side
+                // should only be allowed via Firestore security rules for authenticated admins.
+                const snapshot = await db.collection('testResults').get();
+                allTestResults = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Fetched results:", allTestResults);
+
+                // Apply current sorting
+                if (currentSortedColumn) {
+                    sortData(currentSortedColumn, false); // false to not toggle direction
+                } else {
+                    renderTable(); // Render initial unsorted/default sorted data
+                }
+            } catch (error) {
+                console.error("Error loading test results:", error);
+                testResultsTableBody.empty().append(`<tr><td colspan="7" class="text-center text-danger py-4">Error loading data: ${error.message}</td></tr>`);
+                showCustomModal('Data Load Error', `
+                    <p class="text-danger font-semibold mb-3">Failed to load test results.</p>
+                    <p>Please check your internet connection or Firebase permissions.</p>
+                    <p>Error: ${error.message}</p>
+                `);
+            }
+        }
+
+        // --- Render Table (Pagination & Display) ---
+        function renderTable() {
+            testResultsTableBody.empty();
+            if (allTestResults.length === 0) {
+                testResultsTableBody.append('<tr><td colspan="7" class="text-center py-4">No test results found.</td></tr>');
+                updatePaginationInfo(0, 0, 0);
+                return;
+            }
+
+            const totalRecords = allTestResults.length;
+            totalRecordsSpan.text(totalRecords);
+
+            let startIndex = (currentPage - 1) * rowsPerPage;
+            let endIndex = startIndex + rowsPerPage;
+            let currentViewData = allTestResults;
+
+            if (rowsPerPage !== 'All') {
+                startIndex = (currentPage - 1) * parseInt(rowsPerPage);
+                endIndex = Math.min(startIndex + parseInt(rowsPerPage), totalRecords);
+                currentViewData = allTestResults.slice(startIndex, endIndex);
+            } else {
+                startIndex = 0;
+                endIndex = totalRecords;
+            }
+
+            currentViewData.forEach((result, index) => {
+                const absoluteIndex = (rowsPerPage === 'All') ? index : startIndex + index;
+                const statusClass = result.status === 'Pass' ? 'text-success' : 'text-danger';
+                const row = `
+                    <tr>
+                        <td data-label="Select">
+                            <input type="checkbox" class="row-checkbox" data-id="${result.id}">
+                        </td>
+                        <td data-label="Name">${result.name}</td>
+                        <td data-label="Email">${result.email}</td>
+                        <td data-label="Score">${result.score}</td>
+                        <td data-label="Status" class="${statusClass} font-bold">${result.status}</td>
+                        <td data-label="Date">${result.timestamp ? new Date(result.timestamp.toDate()).toLocaleString() : 'N/A'}</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-danger btn-sm delete-single-btn" data-id="${result.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                testResultsTableBody.append(row);
+            });
+
+            updatePaginationInfo(startIndex + 1, endIndex, totalRecords);
+            updatePaginationControls(totalRecords);
+            checkDeleteSelectedButtonState();
+            // Ensure select all checkbox is unchecked on re-render
+            selectAllCheckbox.prop('checked', false);
+        }
+
+        function updatePaginationInfo(start, end, total) {
+            currentPageStartSpan.text(start);
+            currentPageEndSpan.text(end);
+            totalRecordsSpan.text(total);
+        }
+
+        function updatePaginationControls(totalRecords) {
+            const totalPages = rowsPerPage === 'All' ? 1 : Math.ceil(totalRecords / parseInt(rowsPerPage));
+            prevPageBtn.toggleClass('disabled', currentPage === 1);
+            nextPageBtn.toggleClass('disabled', currentPage === totalPages || totalPages === 0);
+
+            // Hide/Show page number links if implementing granular pagination
+            // For now, simple Prev/Next is enough
+        }
+
+        // --- Pagination Controls ---
+        prevPageBtn.on('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        });
+
+        nextPageBtn.on('click', function(e) {
+            e.preventDefault();
+            const totalPages = rowsPerPage === 'All' ? 1 : Math.ceil(allTestResults.length / parseInt(rowsPerPage));
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        });
+
+        rowsPerPageSelect.on('change', function() {
+            rowsPerPage = $(this).val();
+            currentPage = 1; // Reset to first page
+            renderTable();
+        });
+
+        // --- Sorting ---
+        $('th[data-sort]').on('click', function() {
+            const column = $(this).data('sort');
+            if (currentSortedColumn === column) {
+                currentSortDirection = (currentSortDirection === 'asc') ? 'desc' : 'asc';
+            } else {
+                currentSortedColumn = column;
+                currentSortDirection = 'asc'; // Default sort direction for new column
+            }
+            sortData(column, true); // true to update header icons
+        });
+
+        function sortData(column, updateHeaderIcons = true) {
+            allTestResults.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+
+                if (column === 'score') {
+                    valA = parseInt(valA);
+                    valB = parseInt(valB);
+                } else if (column === 'timestamp' && valA && valB) {
+                    // Handle cases where timestamp might be missing or null
+                    if (valA && valA.toDate) valA = valA.toDate().getTime();
+                    else valA = 0; // Or some other default value
+                    
+                    if (valB && valB.toDate) valB = valB.toDate().getTime();
+                    else valB = 0; // Or some other default value
+                } else if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+
+                if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            if (updateHeaderIcons) {
+                $('th[data-sort] i').removeClass('fa-sort-up fa-sort-down').addClass('fa-sort');
+                $(`th[data-sort="${column}"] i`).removeClass('fa-sort').addClass(currentSortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down');
+            }
+            renderTable();
+        }
+
+        // --- Refresh Data ---
+        refreshDataBtn.on('click', function() {
+            loadTestResults();
+        });
+
+        // --- Delete Functionality ---
+        // Helper to get selected user IDs
+        function getSelectedUserIds() {
+            const selectedIds = [];
+            $('.row-checkbox:checked').each(function() {
+                selectedIds.push($(this).data('id'));
+            });
+            return selectedIds;
+        }
+
+        // Check/uncheck all checkboxes
+        selectAllCheckbox.on('change', function() {
+            $('.row-checkbox').prop('checked', $(this).prop('checked'));
+            checkDeleteSelectedButtonState();
+        });
+
+        // Enable/disable Delete Selected button based on checkbox selection
+        testResultsTableBody.on('change', '.row-checkbox', function() {
+            checkDeleteSelectedButtonState();
+        });
+
+        function checkDeleteSelectedButtonState() {
+            const anyChecked = $('.row-checkbox:checked').length > 0;
+            deleteSelectedBtn.prop('disabled', !anyChecked);
+        }
+
+        // Delete Single User
+        testResultsTableBody.on('click', '.delete-single-btn', async function() {
+            const docId = $(this).data('id');
+            showCustomModal(
+                'Confirm Deletion',
+                `<p>Are you sure you want to delete this test result? This action cannot be undone.</p>
+                <p class="mt-3"><button id="confirmDeleteBtn" class="btn btn-danger me-2">Yes, Delete</button><button id="cancelDeleteBtn" class="btn btn-secondary">No, Cancel</button></p>`,
+                null, // No callback on initial display
+                false // Hide default close button
+            );
+
+            $('#confirmDeleteBtn').off('click').on('click', async function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+
+                try {
+                    // SECURE DELETION: Call a Firebase Cloud Function for single deletion
+                    // This function would receive docId, verify admin, and then delete.
+                    const deleteUserResult = functions.httpsCallable('deleteSingleTestResult');
+                    const result = await deleteUserResult({ docId: docId });
+
+                    if (result.data.success) {
+                        showCustomModal('Success', 'Test result deleted successfully!', loadTestResults);
+                    } else {
+                        showCustomModal('Error', `Failed to delete test result: ${result.data.error || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error("Error deleting single user:", error);
+                    showCustomModal('Deletion Failed', `
+                        <p class="text-danger font-semibold mb-3">An error occurred during deletion.</p>
+                        <p>Error: ${error.message}</p>
+                    `);
+                }
+            });
+
+            $('#cancelDeleteBtn').off('click').on('click', function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+            });
+        });
+
+        // Delete Multiple Users
+        deleteSelectedBtn.on('click', async function() {
+            const selectedIds = getSelectedUserIds();
+            if (selectedIds.length === 0) {
+                showCustomModal('No Selection', 'Please select at least one record to delete.');
+                return;
+            }
+
+            showCustomModal(
+                'Confirm Deletion',
+                `<p>Are you sure you want to delete ${selectedIds.length} selected test result(s)? This action cannot be undone.</p>
+                <p class="mt-3"><button id="confirmDeleteBtn" class="btn btn-danger me-2">Yes, Delete</button><button id="cancelDeleteBtn" class="btn btn-secondary">No, Cancel</button></p>`,
+                null, // No callback on initial display
+                false // Hide default close button
+            );
+
+            $('#confirmDeleteBtn').off('click').on('click', async function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+
+                try {
+                    // SECURE DELETION: Call a Firebase Cloud Function for multiple deletions
+                    const deleteMultipleUsers = functions.httpsCallable('deleteMultipleTestResults');
+                    const result = await deleteMultipleUsers({ docIds: selectedIds });
+
+                    if (result.data.success) {
+                        showCustomModal('Success', `${selectedIds.length} test result(s) deleted successfully!`, loadTestResults);
+                    } else {
+                        showCustomModal('Error', `Failed to delete multiple test results: ${result.data.error || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error("Error deleting multiple users:", error);
+                    showCustomModal('Deletion Failed', `
+                        <p class="text-danger font-semibold mb-3">An error occurred during multiple deletions.</p>
+                        <p>Error: ${error.message}</p>
+                    `);
+                }
+            });
+
+            $('#cancelDeleteBtn').off('click').on('click', function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+            });
+        });
+
+        // Delete All Users
+        deleteAllBtn.on('click', async function() {
+            if (allTestResults.length === 0) {
+                showCustomModal('No Data', 'There are no records to delete.');
+                return;
+            }
+
+            showCustomModal(
+                'Confirm ALL Deletion',
+                `<p class="text-danger font-bold">WARNING: This will delete ALL ${allTestResults.length} test results permanently! This action cannot be undone.</p>
+                <p class="mt-3"><button id="confirmDeleteBtn" class="btn btn-danger me-2">Yes, Delete All</button><button id="cancelDeleteBtn" class="btn btn-secondary">No, Cancel</button></p>`,
+                null, // No callback on initial display
+                false // Hide default close button
+            );
+
+            $('#confirmDeleteBtn').off('click').on('click', async function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+
+                try {
+                    // SECURE DELETION: Call a Firebase Cloud Function for all deletions
+                    const deleteAllUsers = functions.httpsCallable('deleteAllTestResults');
+                    const result = await deleteAllUsers();
+
+                    if (result.data.success) {
+                        showCustomModal('Success', 'All test results deleted successfully!', loadTestResults);
+                    } else {
+                        showCustomModal('Error', `Failed to delete all test results: ${result.data.error || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error("Error deleting all users:", error);
+                    showCustomModal('Deletion Failed', `
+                        <p class="text-danger font-semibold mb-3">An error occurred during bulk deletion.</p>
+                        <p>Error: ${error.message}</p>
+                    `);
+                }
+            });
+
+            $('#cancelDeleteBtn').off('click').on('click', function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button
+            });
+        });
+
+        // --- Print PDF Data ---
+        printPdfDataBtn.on('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const tableColumn = ["#", "Name", "Email", "Score", "Status", "Date"];
+            const tableRows = [];
+
+            allTestResults.forEach((result, index) => {
+                const resultData = [
+                    index + 1,
+                    result.name,
+                    result.email,
+                    result.score,
+                    result.status,
+                    result.timestamp ? new Date(result.timestamp.toDate()).toLocaleString() : 'N/A'
+                ];
+                tableRows.push(resultData);
+            });
+
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 20,
+                styles: { fontSize: 10, cellPadding: 2, overflow: 'linebreak' },
+                headStyles: { fillColor: [0, 123, 255], textColor: 255, fontStyle: 'bold' },
+                columnStyles: {
+                    0: { cellWidth: 10 }, // #
+                    1: { cellWidth: 40 }, // Name
+                    2: { cellWidth: 50 }, // Email
+                    3: { cellWidth: 15 }, // Score
+                    4: { cellWidth: 20 }, // Status
+                    5: { cellWidth: 45 }  // Date
+                },
+                didDrawPage: function (data) {
+                    // Header
+                    doc.setFontSize(18);
+                    doc.setTextColor(40);
+                    doc.text("ECP Mock Test Results", data.settings.margin.left, 15);
+
+                    // Footer
+                    let str = "Page " + doc.internal.getNumberOfPages();
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    doc.text(str, data.settings.margin.left, doc.internal.pageSize.height - 10);
+                }
+            });
+
+            doc.save('ECP_Mock_Test_Results.pdf');
+        });
+
+        // Initial load of results when dashboard is active (after login)
+        // Handled by onAuthStateChanged
+    </script>
+</body>
+</html>
