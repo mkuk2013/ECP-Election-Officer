@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECP BPS-17 Election Officer Mock Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Colors & Variables */
+        :root {
+            --primary-color: #007bff; /* A vibrant blue */
+            --primary-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --light-bg: #f5f7fa; /* Lighter background for more freshness */
+            --dark-bg: #1a202c; /* Deeper dark background */
+            --light-text: #2d3748; /* Darker text for readability on light */
+            --dark-text: #e2e8f0; /* Lighter text for readability on dark */
+            --card-bg-light: #ffffff;
+            --card-bg-dark: #2d3748; /* Darker card for contrast */
+            --border-color-light: #e2e8f0;
+            --border-color-dark: #4a5568;
+            --accent-green: #28a745;
+            --accent-green-dark: #218838;
+            --accent-red: #dc3545;
+            --accent-red-dark: #c82333;
+            --accent-yellow: #ffc107;
+            --accent-yellow-dark: #e0a800;
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Inter', sans-serif; /* Modern font */
+            transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* Dark Mode Styling */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .container-fluid {
+            flex: 1;
+        }
+
+        /* Header & Footer */
+        .header, .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.25rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .header, .dark-mode .footer {
+            background-color: #2c5282; /* A blue-gray for dark mode header/footer */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--border-color-light);
+            transition: background-color 0.4s ease-in-out, border-color 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* Softer, larger shadow */
+            padding: 2rem;
+        }
+
+        .dark-mode .card {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--dark-text);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        /* Form Elements */
+        .form-control {
+            border-radius: 0.75rem; /* Slightly more rounded */
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color-light);
+            background-color: #ffffff;
+            color: var(--light-text);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .dark-mode .form-control {
+            background-color: #4a5568;
+            border-color: #6c757d;
+            color: var(--dark-text);
+        }
+
+        .dark-mode .form-control:focus {
+            border-color: #63b3ed; /* Lighter blue for dark mode focus */
+            box-shadow: 0 0 0 0.25rem rgba(99, 179, 237, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+        }
+        .dark-mode .form-label {
+             color: var(--dark-text);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #63b3ed; /* Light blue for primary in dark mode */
+            border-color: #63b3ed;
+            color: #1a202c; /* Dark text on light button */
+        }
+        .dark-mode .btn-primary:hover {
+            background-color: #4299e1;
+            border-color: #4299e1;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2);
+        }
+
+        .dark-mode .btn-secondary {
+            background-color: #718096; /* Gray-blue for secondary in dark mode */
+            border-color: #718096;
+            color: var(--dark-text);
+        }
+        .dark-mode .btn-secondary:hover {
+            background-color: #5c636a;
+            border-color: #5c636a;
+        }
+
+        .btn-warning {
+            background-color: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+            color: var(--light-text); /* Dark text on yellow */
+        }
+        .btn-warning:hover {
+            background-color: var(--accent-yellow-dark);
+            border-color: var(--accent-yellow-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.2);
+        }
+
+        .dark-mode .btn-warning {
+            background-color: #ecc94b; /* Lighter yellow for dark mode */
+            border-color: #ecc94b;
+        }
+        .dark-mode .btn-warning:hover {
+            background-color: #d69e2e;
+            border-color: #d69e2e;
+        }
+
+        .btn-success {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        .btn-success:hover {
+            background-color: var(--accent-green-dark);
+            border-color: var(--accent-green-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .dark-mode .btn-success {
+            background-color: #48bb78;
+            border-color: #48bb78;
+        }
+        .dark-mode .btn-success:hover {
+            background-color: #38a169;
+            border-color: #38a169;
+        }
+
+        .btn-info {
+            background-color: #17a2b8; /* Bootstrap Info */
+            border-color: #17a2b8;
+        }
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(23, 162, 184, 0.2);
+        }
+
+        .dark-mode .btn-info {
+            background-color: #3182ce; /* A blue for info in dark mode */
+            border-color: #3182ce;
+        }
+        .dark-mode .btn-info:hover {
+            background-color: #2b6cb0;
+            border-color: #2b6cb0;
+        }
+
+        /* Option Labels (Radio Button Alternatives) */
+        .option-label {
+            display: flex; /* Use flex for icon alignment */
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem; /* More spacing */
+            border: 1px solid var(--border-color-light);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--card-bg-light);
+            color: var(--light-text);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .dark-mode .option-label {
+            background-color: #4a5568;
+            border-color: #6c757d;
+            color: var(--dark-text);
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+        }
+
+        .dark-mode .option-label:hover {
+            background-color: #5c636a;
+            border-color: #63b3ed;
+            box-shadow: 0 4px 12px rgba(99, 179, 237, 0.1);
+        }
+
+        input[type="radio"]:checked + .option-label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .dark-mode input[type="radio"]:checked + .option-label {
+            background-color: #63b3ed;
+            border-color: #63b3ed;
+            color: #1a202c; /* Dark text on light blue for contrast */
+            box-shadow: 0 5px 15px rgba(99, 179, 237, 0.3);
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Question Palette */
+        .question-palette {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--border-color-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--primary-color) #f1f1f1; /* Firefox */
+        }
+
+        .question-palette::-webkit-scrollbar {
+            height: 8px;
+        }
+        .question-palette::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .question-palette::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        .dark-mode .question-palette {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            scrollbar-color: #63b3ed #4a5568;
+        }
+        .dark-mode .question-palette::-webkit-scrollbar-track {
+            background: #4a5568;
+        }
+        .dark-mode .question-palette::-webkit-scrollbar-thumb {
+            background: #63b3ed;
+        }
+
+        .question-palette-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Larger circles */
+            height: 48px;
+            border-radius: 50%;
+            background-color: #e0e7ee; /* Lighter background for default */
+            color: var(--light-text);
+            margin: 0.4rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            flex-shrink: 0;
+            border: 2px solid transparent; /* Border for current/answered */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .dark-mode .question-palette-item {
+            background-color: #4a5568;
+            color: var(--dark-text);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .question-palette-item:hover {
+            background-color: #d1dae3;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .dark-mode .question-palette-item:hover {
+            background-color: #5c636a;
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .question-palette-item.current {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: white; /* White border for emphasis */
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+        }
+        .dark-mode .question-palette-item.current {
+            background-color: #63b3ed;
+            border-color: #1a202c; /* Dark border for emphasis in dark mode */
+            color: #1a202c;
+        }
+
+        .question-palette-item.answered {
+            background-color: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+        .dark-mode .question-palette-item.answered {
+            background-color: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .question-palette-item.marked {
+            background-color: var(--accent-yellow);
+            color: var(--light-text);
+            border-color: var(--accent-yellow);
+        }
+        .dark-mode .question-palette-item.marked {
+            background-color: #ecc94b;
+            color: var(--light-text);
+            border-color: #ecc94b;
+        }
+
+        /* Result and Review Section */
+        .result-section h2, .review-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        .dark-mode .result-section h2, .dark-mode .review-section h2 {
+            color: #63b3ed;
+        }
+
+        .result-section p {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+        .result-section .font-bold {
+            font-weight: 700;
+        }
+
+        .review-question-list .card {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .review-question-list p {
+            margin-bottom: 0.5rem;
+        }
+
+        .review-question-list .option-text, /* Target for normal option text */
+        .review-question-list .text-gray-700 { /* Target for "Your Selection" text */
+            color: var(--light-text); /* Default for light mode */
+        }
+
+        .dark-mode .review-question-list .option-text,
+        .dark-mode .review-question-list .text-gray-700 {
+            color: var(--dark-text); /* White/light gray for dark mode */
+        }
+
+        .review-question-list .bg-success-light {
+            background-color: #d4edda;
+            color: var(--accent-green); /* Text color for light mode correct */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+        .dark-mode .review-question-list .bg-success-light {
+            background-color: #38a169;
+            color: #d4edda; /* Lighter text for dark mode correct */
+        }
+
+        .review-question-list .bg-danger-light {
+            background-color: #f8d7da;
+            color: var(--accent-red); /* Text color for light mode incorrect */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+        .dark-mode .review-question-list .bg-danger-light {
+            background-color: #c53030;
+            color: #f8d7da; /* Lighter text for dark mode incorrect */
+        }
+
+        .review-question-list .fa-check {
+            color: var(--accent-green);
+        }
+        .dark-mode .review-question-list .fa-check {
+            color: #48bb78;
+        }
+
+        .review-question-list .fa-times {
+            color: var(--accent-red);
+        }
+        .dark-mode .review-question-list .fa-times {
+            color: #e53e3e;
+        }
+
+        /* Timer Specific Styling */
+        .timer-display-container {
+            background-color: #f0f4f8; /* Light background for timer */
+            color: var(--light-text); /* Dark text for light mode */
+            transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        .dark-mode .timer-display-container {
+            background-color: #3a475a; /* Darker background for timer in dark mode */
+            color: var(--dark-text); /* Light text for dark mode */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .timer-display-container .fas {
+            color: var(--primary-color); /* Icon color */
+        }
+
+        .dark-mode .timer-display-container .fas {
+            color: #63b3ed; /* Lighter blue for icon in dark mode */
+        }
+
+        #timer {
+            font-weight: 700;
+            color: var(--primary-color); /* Timer numbers in primary color for light mode */
+            transition: color 0.4s ease-in-out;
+        }
+
+        .dark-mode #timer {
+            color: #81e6d9; /* A distinct light color for timer numbers in dark mode */
+        }
+
+        #timer.text-danger {
+            color: var(--accent-red) !important; /* Override with red when time is low */
+        }
+        .dark-mode #timer.text-danger {
+            color: #e53e3e !important; /* Ensure red is visible in dark mode too */
+        }
+
+        /* Modal Specific Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1050; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg-light);
+            margin: auto;
+            padding: 30px;
+            border: 1px solid var(--border-color-light);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .dark-mode .modal-content {
+            background-color: var(--card-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--dark-text);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            padding-top: 0;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify; /* Ensure English text is justified */
+        }
+        .modal-body ul {
+            list-style: decimal;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .modal-body ul li {
+            margin-bottom: 10px;
+        }
+
+        .modal-footer {
+            border-top: none;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .modal-footer .btn {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+        }
+        /* Styling for Urdu text */
+        .urdu-text {
+            font-family: 'Jameel Noori Nastaleeq', 'Noto Naskh Arabic Urdu', Arial, sans-serif; /* Fallback fonts */
+            direction: rtl; /* Right-to-left for Urdu */
+            text-align: right; /* Align Urdu text to the right */
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        /* Import a good Urdu font if not already available on user's system */
+        @import url('https://fonts.googleapis.com/css2?family=Jameel+Noori+Nastaleeq&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic+Urdu:wght@400..700&display=swap');
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .question-palette {
+                padding: 1rem;
+            }
+            .question-palette-item {
+                width: 40px;
+                height: 40px;
+                margin: 0.2rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .result-section p {
+                font-size: 1rem;
+            }
+            .result-section h2 {
+                font-size: 2.2rem;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            .modal-body {
+                font-size: 1rem;
+            }
+            .urdu-text {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .d-flex.justify-content-between.mt-4.question-navigation-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .btn.w-100 { /* Adjust for full width buttons on small screens */
+                width: 100% !important;
+            }
+             .btn-sm { /* Adjust for theme toggle */
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .d-none.d-md-inline {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header class="header sticky-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-4 py-3">
+            <h1 class="text-2xl md:text-3xl font-bold">ECP BPS-17 Election Officer Mock Test</h1>
+            <button id="themeToggle" class="btn btn-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-moon me-2" id="themeIcon"></i> <span class="d-none d-md-inline">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="container-fluid py-5 flex-grow-1">
+        <section id="userInfoSection" class="row justify-content-center d-none">
+            <div class="col-lg-5 col-md-7 col-sm-10">
+                <div class="card p-5 shadow-xl">
+                    <h2 class="text-center text-4xl font-extrabold mb-6">Start Your Mock Test</h2>
+                    <form id="userInfoForm">
+                        <div class="mb-4">
+                            <label for="userName" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="userName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="userEmail" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="userEmail" placeholder="e.g., yourname@example.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3 text-lg">
+                            <i class="fas fa-play-circle me-2"></i> Start Test
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="testSection" class="d-none">
+            <div class="row mb-5 items-center justify-content-between">
+                <div class="col-md-8 mb-3 md:mb-0">
+                    <h3 class="text-2xl font-semibold flex items-center">
+                        <i class="fas fa-book me-3 text-primary"></i> <span id="currentSectionName"></span>
+                    </h3>
+                </div>
+                <div class="col-md-4 text-md-end text-center">
+                    <div class="timer-display-container">
+                        <i class="fas fa-clock me-2"></i> Time Left: <span id="timer" class="ms-2">90:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row gx-4">
+                <div class="col-md-8">
+                    <div class="card shadow-lg min-h-[400px] flex flex-col justify-content-between">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2 font-medium">Question <span id="questionNumber">1</span> of 100</p>
+                            <h4 class="text-xl font-bold mb-5" id="questionText"></h4>
+                            <div id="optionsContainer" class="space-y-4">
+                                </div>
+                        </div>
+                        <div class="d-flex flex-column flex-md-row justify-content-between mt-6 gap-3 question-navigation-buttons">
+                            <button id="prevBtn" class="btn btn-secondary px-5 py-3" disabled><i class="fas fa-arrow-left me-2"></i> Previous</button>
+                            <button id="markBtn" class="btn btn-warning px-5 py-3"><i class="fas fa-bookmark me-2"></i> Mark for Review</button>
+                            <button id="nextBtn" class="btn btn-primary px-5 py-3">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mt-5 mt-md-0">
+                    <div class="card shadow-lg h-100">
+                        <h5 class="font-extrabold text-2xl mb-4 text-center">Question Palette</h5>
+                        <div id="questionPalette" class="question-palette">
+                            </div>
+                        <button id="submitTestBtn" class="btn btn-success w-100 mt-5 py-3 text-lg">
+                            <i class="fas fa-check-circle me-2"></i> Submit Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="resultSection" class="d-none row justify-content-center">
+            <div class="col-lg-7 col-md-9 col-sm-11">
+                <div class="card p-5 shadow-xl text-center result-section">
+                    <h2 class="text-5xl font-extrabold mb-5">Test Result</h2>
+                    <p class="text-xl mb-3">Name: <span id="resultName" class="font-semibold text-primary dark:text-light-text"></span></p>
+                    <p class="text-xl mb-3">Email: <span id="resultEmail" class="font-semibold text-primary dark:text-light-text"></span></p>
+                    <p class="text-3xl mb-4 font-bold">Your Score: <span id="finalScore" class="font-extrabold"></span> / 100</p>
+                    <p class="text-4xl font-extrabold mb-6" id="passFailStatus"></p>
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-4">
+                        <button id="reviewTestBtn" class="btn btn-info px-5 py-3 text-lg">
+                            <i class="fas fa-eye me-2"></i> Review Test
+                        </button>
+                        <button id="printPdfBtn" class="btn btn-secondary px-5 py-3 text-lg">
+                            <i class="fas fa-print me-2"></i> Print Result PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reviewSection" class="d-none">
+            <h2 class="text-center text-4xl font-extrabold mb-6">Review Your Answers</h2>
+            <div id="reviewQuestionList" class="review-question-list">
+                </div>
+            <div class="text-center mt-6">
+                <button id="backToResultBtn" class="btn btn-primary px-5 py-3 text-lg">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Result
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer mt-auto">
+        <div class="container-fluid text-center text-sm py-3">
+            <p class="mb-0">&copy; 2024 ECP Mock Test. All rights reserved. Designed with ❤️</p>
+        </div>
+    </footer>
+
+    <div id="universalMessageModal" class="modal" tabindex="-1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-3xl font-bold w-100" id="universalModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="universalModalBody" class=""></p>
+                <p id="universalModalUrduBody" class="urdu-text"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="universalModalCloseBtn" class="btn btn-primary">
+                    Close (بند کریں)
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script>
+        // --- Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG) ---
+         const firebaseConfig = {
+    apiKey: "AIzaSyARioi_SsJ036uPaozAffshFwo0BEIVGls",
+    authDomain: "ecp-mocktest.firebaseapp.com",
+    projectId: "ecp-mocktest",
+    storageBucket: "ecp-mocktest.firebasestorage.app",
+    messagingSenderId: "93126984229",
+    appId: "1:93126984229:web:80f32bcfd73b7ded74b5cc",
+    measurementId: "G-Y2XKSLJH2F"
+  };
+
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the Firestore service
+        const db = firebase.firestore();
+        // --- End Firebase Configuration ---
+
+        const questionsData = [
+            // Section 1: English (Questions 1-30)
+            { section: "English", question: "Choose the word that is most nearly similar in meaning (Synonym) to the capitalized word: CANDID", options: ["Vague", "Frank", "Secretive", "Deceptive"], correct: 1 },
+            { section: "English", question: "Choose the word that is most nearly similar in meaning (Synonym) to the capitalized word: ABUNDANT", options: ["Scarce", "Limited", "Plentiful", "Rare"], correct: 2 },
+            { section: "English", question: "Choose the word that is most nearly similar in meaning (Synonym) to the capitalized word: TENACIOUS", options: ["Weak", "Giving up", "Persistent", "Timid"], correct: 2 },
+            { section: "English", question: "Choose the word that is most nearly similar in meaning (Synonym) to the capitalized word: JUBILANT", options: ["Sad", "Ecstatic", "Angry", "Depressed"], correct: 1 },
+            { section: "English", question: "Choose the word that is most nearly similar in meaning (Synonym) to the capitalized word: MITIGATE", options: ["Worsen", "Increase", "Aggravate", "Alleviate"], correct: 3 },
+            { section: "English", question: "Choose the word that is most nearly opposite in meaning (Antonym) to the capitalized word: BRAVE", options: ["Courageous", "Bold", "Cowardly", "Daring"], correct: 2 },
+            { section: "English", question: "Choose the word that is most nearly opposite in meaning (Antonym) to the capitalized word: TRANSPARENT", options: ["Clear", "Opaque", "Lucid", "Obvious"], correct: 1 },
+            { section: "English", question: "Choose the word that is most nearly opposite in meaning (Antonym) to the capitalized word: ACCELERATE", options: ["Hurry", "Speed up", "Delay", "Quicken"], correct: 2 },
+            { section: "English", question: "Choose the word that is most nearly opposite in meaning (Antonym) to the capitalized word: INTRICATE", options: ["Complex", "Simple", "Complicated", "Detailed"], correct: 1 },
+            { section: "English", question: "Choose the word that is most nearly opposite in meaning (Antonym) to the capitalized word: PERMANENT", options: ["Lasting", "Eternal", "Temporary", "Constant"], correct: 2 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: He is good ___ mathematics.", options: ["in", "at", "with", "for"], correct: 1 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: I have been waiting for you ___ two hours.", options: ["since", "from", "for", "by"], correct: 2 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: She prefers tea ___ coffee.", options: ["than", "over", "from", "to"], correct: 3 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: Neither of the students ___ present in the class.", options: ["were", "was", "are", "have"], correct: 1 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: The sun ___ in the east.", options: ["rise", "rose", "rises", "has risen"], correct: 2 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: If I ___ you, I would not make that mistake.", options: ["was", "am", "were", "had been"], correct: 2 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: He is accused ___ theft.", options: ["with", "for", "of", "on"], correct: 2 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: He has no desire ___ fame.", options: ["for", "of", "to", "in"], correct: 0 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: A person who knows many languages is called a ___.", options: ["linguist", "polyglot", "bilingual", "grammarian"], correct: 1 },
+            { section: "English", question: "Fill in the blank with the most appropriate option: The jury ___ divided in their opinion.", options: ["was", "is", "were", "has"], correct: 2 },
+            { section: "English", question: "To \"hit the nail on the head\" means:", options: ["To do something exactly right", "To miss an opportunity", "To hurt someone", "To work hard"], correct: 0 },
+            { section: "English", question: "Choose the correctly spelled word:", options: ["Comittee", "Commitee", "Committee", "Comitee"], correct: 2 },
+            { section: "English", question: "Choose the correctly spelled word:", options: ["Necessary", "Neccessary", "Necessery", "Necesary"], correct: 0 },
+            { section: "English", question: "Analogy: Doctor is to Hospital as Teacher is to ___.", options: ["Book", "Student", "School", "Board"], correct: 2 },
+            { section: "English", question: "Analogy: Car is to Road as Ship is to ___.", options: ["Captain", "Water", "Port", "Air"], correct: 1 },
+            { section: "English", question: "Fill in the blank: I saw ___ one-eyed man yesterday.", options: ["a", "an", "the", "no article"], correct: 0 },
+            { section: "English", question: "Fill in the blank: He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: 1 },
+            { section: "English", question: "The passive voice of \"He is writing a letter\" is:", options: ["A letter is wrote by him.", "A letter is being written by him.", "A letter has been written by him.", "A letter was being written by him."], correct: 1 },
+            { section: "English", question: "Find the error: \"The news are not true.\"", options: ["The news", "are", "not true", "No error"], correct: 1 },
+            { section: "English", question: "Find the error: \"One of my friend is a doctor.\"", options: ["One of", "my friend", "is a doctor", "No error"], correct: 1 },
+            // Section 2: Constitution & Election Act (Questions 31-60)
+            { section: "Constitution & Election Act", question: "Part I of the 1973 Constitution of Pakistan deals with:", options: ["The Republic and its Territories", "Fundamental Rights and Principles of Policy", "Introductory", "The Judicature"], correct: 2 },
+            { section: "Constitution & Election Act", question: "Part II of the 1973 Constitution of Pakistan deals with:", options: ["The Federation of Pakistan", "Fundamental Rights and Principles of Policy", "The Provinces", "Relations between Federation and Provinces"], correct: 1 },
+            { section: "Constitution & Election Act", question: "According to Article 8 of the Constitution, which of the following is considered the 'State'?", options: ["The Federal Government", "A Provincial Government", "Parliament and Provincial Assemblies", "All of the above"], correct: 3 },
+            { section: "Constitution & Election Act", question: "Article 19 of the 1973 Constitution guarantees:", options: ["Freedom of speech", "Freedom of assembly", "Freedom of association", "Freedom of religion"], correct: 0 },
+            { section: "Constitution & Election Act", question: "Article 25-A of the Constitution makes it obligatory for the State to provide free and compulsory education to all children of the age:", options: ["5 to 16 years", "6 to 18 years", "5 to 15 years", "7 to 14 years"], correct: 0 },
+            { section: "Constitution & Election Act", question: "Safeguards against arrest and detention are provided in which Article of the Constitution?", options: ["Article 9", "Article 10", "Article 11", "Article 12"], correct: 1 },
+            { section: "Constitution & Election Act", question: "The \"Principles of Policy\" in the Constitution are:", options: ["Justiciable (enforceable by any court)", "Non-justiciable (not enforceable by any court)", "Enforceable only by the Supreme Court", "Enforceable only by the High Courts"], correct: 1 },
+            { section: "Constitution & Election Act", question: "Part VIII of the 1973 Constitution is related to:", options: ["Finance, Property, Contracts and Suits", "Islamic Provisions", "Emergency Provisions", "Elections"], correct: 3 },
+            { section: "Constitution & Election Act", question: "Who appoints the Chief Election Commissioner of Pakistan?", options: ["The Prime Minister", "The Chief Justice of Pakistan", "The President", "The Parliament"], correct: 2 },
+            { section: "Constitution & Election Act", question: "What is the term of office for the Chief Election Commissioner?", options: ["3 years", "4 years", "5 years", "6 years"], correct: 2 },
+            { section: "Constitution & Election Act", question: "According to the Constitution, it is the duty of the Election Commission to organize and conduct elections to:", options: ["The National Assembly", "The Provincial Assemblies", "The Senate and Local Government bodies", "All of the above"], correct: 3 },
+            { section: "Constitution & Election Act", question: "The Election Act, 2017, consolidated and replaced how many previous election laws?", options: ["5", "6", "8", "10"], correct: 2 },
+            { section: "Constitution & Election Act", question: "Under the Election Act 2017, what is the minimum percentage of women candidates required on general seats for a political party's list?", options: ["2%", "5%", "10%", "15%"], correct: 1 },
+            { section: "Constitution & Election Act", question: "Who is responsible for the delimitation of constituencies for elections to the National and Provincial Assemblies?", options: ["NADRA", "The Supreme Court", "The Election Commission of Pakistan", "The Ministry of Parliamentary Affairs"], correct: 2 },
+            { section: "Constitution & Election Act", question: "An appeal against the decision of a Returning Officer regarding the acceptance or rejection of nomination papers lies with the:", options: ["High Court", "Election Tribunal", "Supreme Court", "Election Commission"], correct: 1 },
+            { section: "Constitution & Election Act", question: "According to the Election Act 2017, the statement of assets and liabilities must be filed by a member of an Assembly by:", options: ["30th June each year", "31st August each year", "30th September each year", "31st December each year"], correct: 3 },
+            { section: "Constitution & Election Act", question: "What is the maximum limit of election expenses for a candidate for a National Assembly seat?", options: ["Rs. 1.5 million", "Rs. 2 million", "Rs. 4 million", "Rs. 10 million"], correct: 2 },
+            { section: "Constitution & Election Act", question: "What is the maximum limit of election expenses for a candidate for a Provincial Assembly seat?", options: ["Rs. 1 million", "Rs. 2 million", "Rs. 3 million", "Rs. 4 million"], correct: 1 },
+            { section: "Constitution & Election Act", question: "What is the minimum age for a person to be registered as a voter in Pakistan?", options: ["18 years", "20 years", "21 years", "25 years"], correct: 0 },
+            { section: "Constitution & Election Act", question: "Under the Election Act 2017, if the turnout of women voters is less than ___ of the total polled votes in a constituency, the ECP may declare the polling void.", options: ["5%", "10%", "15%", "20%"], correct: 1 },
+            { section: "Constitution & Election Act", question: "Article 62 of the constitution deals with:", options: ["Disqualifications for membership of Majlis-e-Shoora", "Qualifications for membership of Majlis-e-Shoora (Parliament)", "Vacation of seats", "Privileges of members"], correct: 1 },
+            { section: "Constitution & Election Act", question: "Article 63 of the constitution deals with:", options: ["Disqualifications for membership of Majlis-e-Shoora", "Qualifications for membership of Majlis-e-Shoora", "Privileges of members", "Oath of members"], correct: 0 },
+            { section: "Constitution & Election Act", question: "Who is the head of the Election Commission of Pakistan?", options: ["Election Secretary", "A serving Judge", "Chief Election Commissioner", "A retired General"], correct: 2 },
+            { section: "Constitution & Election Act", "question": "The process of preparing electoral rolls is the responsibility of the:", options: ["Ministry of Interior", "NADRA", "Provincial Governments", "Election Commission of Pakistan"], correct: 3 },
+            { section: "Constitution & Election Act", question: "According to the constitution, how soon should an election be held after the dissolution of an assembly?", options: ["Within 60 days", "Within 90 days", "Within 120 days", "Within 30 days"], correct: 1 },
+            { section: "Constitution & Election Act", question: "The 'Result Management System (RMS)' was introduced under which law?", options: ["Representation of the People Act, 1976", "Local Government Ordinance, 2001", "Election Act, 2017", "The Conduct of Elections Rules, 2017"], correct: 2 },
+            { section: "Constitution & Election Act", question: "An Election Tribunal is headed by a:", options: ["District & Sessions Judge", "High Court Judge", "Supreme Court Judge", "Retired Bureaucrat"], correct: 1 },
+            { section: "Constitution & Election Act", question: "The concept of a Caretaker Government to hold elections is mentioned in which part of the Constitution?", options: ["Part V", "Part VI", "Part VII", "Part VIII"], correct: 3 },
+            { section: "Constitution & Election Act", question: "Freedom of religion is guaranteed under which article of the 1973 Constitution?", options: ["Article 18", "Article 20", "Article 22", "Article 24"], correct: 1 },
+            { section: "Constitution & Election Act", question: "The \"Right to Information\" is a fundamental right under which article?", options: ["Article 19", "Article 19-A", "Article 20", "Article 20-A"], correct: 1 },
+            // Section 3: Islamiyat (Questions 61-70)
+            { section: "Islamiyat", question: "What is the literal meaning of 'Zakat'?", options: ["To give", "To purify", "To fast", "To pray"], correct: 1 },
+            { section: "Islamiyat", question: "How many Surahs are there in the Holy Quran?", options: ["112", "114", "116", "120"], correct: 1 },
+            { section: "Islamiyat", question: "Which companion of the Prophet (PBUH) is known as the \"Compiler of the Quran\" (Jami-ul-Quran)?", options: ["Hazrat Abu Bakr (R.A)", "Hazrat Umar (R.A)", "Hazrat Usman (R.A)", "Hazrat Ali (R.A)"], correct: 2 },
+            { section: "Islamiyat", question: "The Battle of Badr was fought in which Hijri year?", options: ["1 A.H.", "2 A.H.", "3 A.H.", "5 A.H."], correct: 1 },
+            { section: "Islamiyat", question: "'Hajj' was made obligatory in:", options: ["7 A.H.", "8 A.H.", "9 A.H.", "10 A.H."], correct: 2 },
+            { section: "Islamiyat", question: "What does \"Khatam-un-Nabiyyin\" mean?", options: ["The first of the Prophets", "The best of the Prophets", "The last of the Prophets", "The leader of the Prophets"], correct: 2 },
+            { section: "Islamiyat", question: "Which Surah of the Holy Quran is known as the \"Heart of the Quran\"?", options: ["Surah Al-Fatiha", "Surah Al-Baqarah", "Surah Yaseen", "Surah Ar-Rehman"], correct: 2 },
+            { section: "Islamiyat", question: "The Treaty of Hudaybiyyah was signed in which Hijri year?", options: ["5 A.H.", "6 A.H.", "7 A.H.", "8 A.H."], correct: 1 },
+            { section: "Islamiyat", question: "The two authentic books of Hadith, \"Sahih al-Bukhari\" and \"Sahih Muslim\", are collectively known as:", options: ["Sunan", "Musnad", "Jami", "Sahihain"], correct: 3 },
+            { section: "Islamiyat", question: "The first mosque of Islam was:", options: ["Masjid-al-Haram", "Masjid-e-Nabawi", "Masjid-e-Quba", "Masjid-al-Aqsa"], correct: 2 },
+            // Section 4: Pakistan Affairs (Questions 71-80)
+            { section: "Pakistan Affairs", question: "Who presented the Lahore Resolution (later known as Pakistan Resolution) on March 23, 1940?", options: ["Quaid-e-Azam Muhammad Ali Jinnah", "Allama Iqbal", "Liaquat Ali Khan", "A.K. Fazlul Huq"], correct: 3 },
+            { section: "Pakistan Affairs", question: "The All-India Muslim League was founded in which city in 1906?", options: ["Lahore", "Karachi", "Aligarh", "Dhaka"], correct: 3 },
+            { section: "Pakistan Affairs", question: "Who was the first Governor-General of Pakistan?", options: ["Liaquat Ali Khan", "Quaid-e-Azam Muhammad Ali Jinnah", "Ghulam Muhammad", "Iskander Mirza"], correct: 1 },
+            { section: "Pakistan Affairs", question: "The famous Allahabad Address of 1930 was delivered by:", options: ["Muhammad Ali Jinnah", "Sir Syed Ahmed Khan", "Allama Muhammad Iqbal", "Maulana Muhammad Ali Jauhar"], correct: 2 },
+            { section: "Pakistan Affairs", question: "What is the name of the highest peak in Pakistan, which is also the second highest in the world?", options: ["Mount Everest", "Nanga Parbat", "K2 (Godwin Austen)", "Tirich Mir"], correct: 2 },
+            { section: "Pakistan Affairs", question: "The first Constitution of Pakistan was enforced on:", options: ["August 14, 1947", "March 23, 1956", "October 27, 1958", "August 14, 1973"], correct: 1 },
+            { section: "Pakistan Affairs", question: "The Indus Waters Treaty was signed between Pakistan and India in which year?", options: ["1948", "1956", "1960", "1965"], correct: 2 },
+            { section: "Pakistan Affairs", question: "The capital of Pakistan was shifted from Karachi to Islamabad in:", options: ["1959", "1963", "1967", "1970"], correct: 2 },
+            { section: "Pakistan Affairs", question: "The Khewra Salt Mine, the second largest in the world, is located in which province?", options: ["Sindh", "Balochistan", "Khyber Pakhtunkhwa", "Punjab"], correct: 3 },
+            { section: "Pakistan Affairs", question: "Who is the author of Pakistan's national anthem?", options: ["Allama Iqbal", "Faiz Ahmed Faiz", "Hafeez Jalandhari", "Josh Malihabadi"], correct: 2 },
+            // Section 5: Current Affairs (Questions 81-90)
+            { section: "Current Affairs", question: "Who is the current Chief Election Commissioner of Pakistan?", options: ["Sikandar Sultan Raja", "Fida Muhammad Khan", "Sardar Muhammad Raza Khan", "Hamid Ali Mirza"], correct: 0 },
+            { section: "Current Affairs", question: "Who is the current Prime Minister of Pakistan?", options: ["Imran Khan", "Shehbaz Sharif", "Asif Ali Zardari", "Anwar-ul-Haq Kakar"], correct: 1 },
+            { section: "Current Affairs", question: "Pakistan recently signed a major economic project with China known as:", options: ["CPEC", "TAPI", "IPI", "CASA-1000"], correct: 0 },
+            { section: "Current Affairs", question: "The 2024 Summer Olympics are scheduled to be held in:", options: ["Tokyo", "Los Angeles", "Paris", "London"], correct: 2 },
+            { section: "Current Affairs", question: "Which international organization is primarily responsible for maintaining international peace and security?", options: ["World Bank", "International Monetary Fund (IMF)", "World Health Organization (WHO)", "United Nations (UN)"], correct: 3 },
+            { section: "Current Affairs", question: "Who is the current Chief Justice of Pakistan?", options: ["Justice Qazi Faez Isa", "Justice Umar Ata Bandial", "Justice Gulzar Ahmed", "Justice Asif Saeed Khosa"], correct: 0 },
+            { section: "Current Affairs", question: "The group of major emerging economies known as BRICS includes Brazil, Russia, India, China, and:", options: ["South Korea", "South Africa", "Saudi Arabia", "Singapore"], correct: 1 },
+            { section: "Current Affairs", question: "The headquarters of the South Asian Association for Regional Cooperation (SAARC) is located in:", options: ["New Delhi, India", "Islamabad, Pakistan", "Kathmandu, Nepal", "Colombo, Sri Lanka"], correct: 2 },
+            { section: "Current Affairs", question: "Pakistan conducted its 7th Population and Housing Census in the year:", options: ["2017", "2020", "2022", "2023"], correct: 3 },
+            { section: "Current Affairs", question: "The Financial Action Task Force (FATF) is an inter-governmental organization founded to combat:", options: ["Climate Change", "Pandemics", "Money Laundering and Terrorism Financing", "Nuclear Proliferation"], correct: 2 },
+            // Section 6: Everyday Science (Questions 91-100)
+            { section: "Everyday Science", question: "Which vitamin deficiency causes night blindness?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], correct: 0 },
+            { section: "Everyday Science", question: "What is the chemical symbol for gold?", options: ["Ag", "Au", "Fe", "Gd"], correct: 1 },
+            { section: "Everyday Science", question: "The 'powerhouse' of a cell is the:", options: ["Nucleus", "Cytoplasm", "Mitochondrion", "Cell Membrane"], correct: 2 },
+            { section: "Everyday Science", question: "Which of the following is responsible for the red color of human blood?", options: ["Plasma", "Platelets", "White Blood Cells", "Hemoglobin"], correct: 3 },
+            { section: "Everyday Science", question: "The SI unit of electric current is:", options: ["Volt", "Watt", "Ohm", "Ampere"], correct: 3 },
+            { section: "Everyday Science", question: "Which planet is known as the 'Red Planet'?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
+            { section: "Everyday Science", question: "The gas used in fire extinguishers is:", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], correct: 2 },
+            { section: "Everyday Science", question: "The process by which plants make their own food is called:", options: ["Respiration", "Transpiration", "Photosynthesis", "Germination"], correct: 2 },
+            { section: "Everyday Science", question: "A Richter scale is used to measure the intensity of:", options: ["Wind", "Rain", "Earthquakes", "Ocean currents"], correct: 2 },
+            { section: "Everyday Science", question: "Sound waves cannot travel through:", options: ["Air", "Water", "Steel", "Vacuum"], correct: 3 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let markedQuestions = new Set();
+        let timerInterval;
+        let timeLeft = 90 * 60; // 90 minutes in seconds
+        let userName = '';
+        let userEmail = '';
+        let userIP = ''; // To store the user's IP address
+
+        const userInfoSection = $('#userInfoSection');
+        const testSection = $('#testSection');
+        const resultSection = $('#resultSection');
+        const reviewSection = $('#reviewSection');
+        const universalMessageModal = $('#universalMessageModal'); // Changed from instructionsModal
+        const universalModalTitle = $('#universalModalTitle');
+        const universalModalBody = $('#universalModalBody');
+        const universalModalUrduBody = $('#universalModalUrduBody');
+        const universalModalCloseBtn = $('#universalModalCloseBtn'); // Button to close the new modal
+
+        const questionNumberSpan = $('#questionNumber');
+        const questionText = $('#questionText');
+        const optionsContainer = $('#optionsContainer');
+        const currentSectionName = $('#currentSectionName');
+        const timerDisplay = $('#timer');
+        const questionPalette = $('#questionPalette');
+
+        const prevBtn = $('#prevBtn');
+        const nextBtn = $('#nextBtn');
+        const markBtn = $('#markBtn');
+        const submitTestBtn = $('#submitTestBtn');
+        const reviewTestBtn = $('#reviewTestBtn');
+        const printPdfBtn = $('#printPdfBtn');
+        const backToResultBtn = $('#backToResultBtn');
+        // Removed agreeToInstructionsBtn as its functionality is now handled by universalModalCloseBtn for the initial instructions
+
+        const themeToggle = $('#themeToggle');
+        const themeIcon = $('#themeIcon');
+
+        // Function to display a custom modal message
+        function showCustomModal(title, messageEnglish, messageUrdu, onCloseCallback = null) {
+            universalModalTitle.text(title);
+            universalModalBody.html(messageEnglish);
+            universalModalUrduBody.html(messageUrdu); // Use html() for potential bolding or formatting
+            universalMessageModal.css('display', 'flex');
+
+            // Set up close button handler
+            universalModalCloseBtn.off('click').on('click', function() {
+                universalMessageModal.css('display', 'none');
+                if (onCloseCallback) {
+                    onCloseCallback();
+                }
+            });
+        }
+
+        // Dark/Light Mode Toggle
+        themeToggle.on('click', function() {
+            $('body').toggleClass('dark-mode');
+            if ($('body').hasClass('dark-mode')) {
+                themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                themeToggle.find('span').text('Light Mode');
+            } else {
+                themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                themeToggle.find('span').text('Dark Mode');
+            }
+        });
+
+        // Function to get user's IP address
+        async function getUserIP() {
+            try {
+                // Using a third-party service to get IP. Note: this might be rate-limited or blocked.
+                // For a more robust solution, you'd need a backend to fetch the IP.
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                userIP = data.ip;
+                console.log("User IP:", userIP);
+            } catch (error) {
+                console.error("Error fetching IP address:", error);
+                userIP = 'unavailable'; // Fallback if IP cannot be fetched
+            }
+        }
+
+        // Show Instructions Modal on page load
+        $(document).ready(function() {
+            getUserIP(); // Fetch IP when page loads
+            showCustomModal(
+                'Test Instructions (ہدایات براۓ امتحان)',
+                `
+                    <p>This is a <b>free Mock Test</b> that can only be attempted <b>once</b>. You will be prevented from re-attempting the test. Thank you for your cooperation.</p>
+                    <hr class="my-4">
+                    <h5 class="text-xl font-semibold mb-3">Important Guidelines:</h5>
+                    <ul class="text-start list-decimal pl-5">
+                        <li>The test consists of <b>100 Multiple Choice Questions (MCQs)</b>.</li>
+                        <li>Total time allocated is <b>90 minutes</b>.</li>
+                        <li>There is <b>no negative marking</b> for incorrect answers.</li>
+                        <li>Please ensure a <b>stable internet connection</b> for an uninterrupted testing experience.</li>
+                        <li>Your <b>email address and IP address</b> will be recorded to enforce the single-attempt policy.</li>
+                        <li>Upon submission or time expiry, your answers will be finalized and cannot be modified.</li>
+                        <li>For optimal viewing, consider switching to <b>Dark Mode</b> if you prefer a darker interface.</li>
+                    </ul>
+                `,
+                `
+                    یہ ایک مفت Mock Test ہے جو صرف **ایک بار** دیا جا سکتا ہے۔ دوبارہ کوشش کرنے سے آپ کو روکا جائے گا۔ آپ کے تعاون کا شکریہ۔
+                `,
+                function() {
+                    userInfoSection.removeClass('d-none'); // Show user info form after initial instructions
+                }
+            );
+            // Rename the button text for the universal modal from "Agree to Instructions" to "Close" initially,
+            // or better yet, dynamically set it based on the modal's purpose.
+            // For the initial instructions, you might still want "I Have Read the Instructions".
+            // Let's modify the showCustomModal to accept button text too.
+            universalModalCloseBtn.text('I Have Read the Instructions (میں نے ہدایات پڑھ لی ہیں)');
+        });
+
+
+        // Handle User Info Submission
+        $('#userInfoForm').on('submit', async function(e) {
+            e.preventDefault();
+            userName = $('#userName').val().trim();
+            userEmail = $('#userEmail').val().trim().toLowerCase();
+
+            if (!userName || !userEmail) {
+                // Use custom modal for this alert as well
+                showCustomModal(
+                    'Missing Information (معلومات نامکمل)',
+                    '<p class="text-red-600 font-semibold">Please enter your full name and email address to start the test.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">ٹیسٹ شروع کرنے کے لیے براہ کرم اپنا مکمل نام اور ای میل ایڈریس درج کریں۔</p>'
+                );
+                return;
+            }
+
+            // Check if user has already taken the test by email or IP
+            const emailQuery = db.collection('testResults').where('email', '==', userEmail);
+            const ipQuery = db.collection('testResults').where('ipAddress', '==', userIP);
+
+            const [emailSnapshot, ipSnapshot] = await Promise.all([emailQuery.get(), ipQuery.get()]);
+
+            let alreadyAttempted = false;
+            let messageEnglish = '';
+            let messageUrdu = '';
+
+            if (!emailSnapshot.empty) {
+                alreadyAttempted = true;
+                messageEnglish = `<p class="text-red-600 font-semibold">This email address (<b>${userEmail}</b>) has already been used to attempt the test. Each user is allowed only <b>one attempt</b>.</p>`;
+                messageUrdu = `<p class="urdu-text text-red-600 font-semibold">یہ ای میل ایڈریس (<b>${userEmail}</b>) پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔ ہر صارف کو صرف **ایک بار** ٹیسٹ دینے کی اجازت ہے۔</p>`;
+            } else if (userIP !== 'unavailable' && !ipSnapshot.empty) {
+                alreadyAttempted = true;
+                messageEnglish = `<p class="text-red-600 font-semibold">It appears this device/IP address (<b>${userIP}</b>) has already been used to attempt the test. Each user is allowed only <b>one attempt</b>.</p>`;
+                messageUrdu = `<p class="urdu-text text-red-600 font-semibold">لگتا ہے کہ یہ ڈیوائس/آئی پی ایڈریس (<b>${userIP}</b>) پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔ ہر صارف کو صرف **ایک بار** ٹیسٹ دینے کی اجازت ہے۔</p>`;
+            }
+
+            if (alreadyAttempted) {
+                showCustomModal(
+                    'Test Already Attempted (ٹیسٹ پہلے ہی دیا جا چکا ہے)',
+                    messageEnglish,
+                    messageUrdu
+                );
+                // After showing the modal, we don't proceed to start the test.
+                // The form remains visible, and the user needs to correct their input or understand why they're blocked.
+                return;
+            }
+
+            // If checks pass, start the test
+            userInfoSection.addClass('d-none');
+            testSection.removeClass('d-none');
+            startTest();
+        });
+
+        function startTest() {
+            loadQuestion();
+            generateQuestionPalette();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const question = questionsData[currentQuestionIndex];
+            questionNumberSpan.text(currentQuestionIndex + 1);
+            questionText.text(question.question);
+            currentSectionName.text(question.section);
+
+            optionsContainer.empty();
+            question.options.forEach((option, index) => {
+                const optionHtml = `
+                    <div>
+                        <input type="radio" id="option${index}" name="question${currentQuestionIndex}" value="${index}" class="hidden" />
+                        <label for="option${index}" class="option-label">
+                            <span class="me-2 text-lg font-semibold">${String.fromCharCode(65 + index)}.</span> ${option}
+                        </label>
+                    </div>
+                `;
+                optionsContainer.append(optionHtml);
+            });
+
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestionIndex] !== null) {
+                $(`#option${userAnswers[currentQuestionIndex]}`).prop('checked', true);
+            }
+
+            // Update navigation buttons
+            prevBtn.prop('disabled', currentQuestionIndex === 0);
+            nextBtn.text(currentQuestionIndex === questionsData.length - 1 ? 'Submit Test' : 'Next');
+            nextBtn.html(currentQuestionIndex === questionsData.length - 1 ? '<i class="fas fa-check-circle me-2"></i> Submit Test' : 'Next <i class="fas fa-arrow-right ms-2"></i>');
+
+
+            // Update mark for review button state
+            if (markedQuestions.has(currentQuestionIndex)) {
+                markBtn.addClass('btn-info').removeClass('btn-warning').html('<i class="fas fa-bookmark me-2"></i> Unmark Review');
+            } else {
+                markBtn.addClass('btn-warning').removeClass('btn-info').html('<i class="fas fa-bookmark me-2"></i> Mark for Review');
+            }
+
+            updateQuestionPalette();
+        }
+
+        function generateQuestionPalette() {
+            questionPalette.empty();
+            questionsData.forEach((_, index) => {
+                const item = $(`<div class="question-palette-item" data-index="${index}">${index + 1}</div>`);
+                item.on('click', function() {
+                    currentQuestionIndex = parseInt($(this).data('index'));
+                    loadQuestion();
+                });
+                questionPalette.append(item);
+            });
+            updateQuestionPalette();
+        }
+
+        function updateQuestionPalette() {
+            questionPalette.find('.question-palette-item').each(function() {
+                const index = parseInt($(this).data('index'));
+                $(this).removeClass('current answered marked');
+
+                if (index === currentQuestionIndex) {
+                    $(this).addClass('current');
+                } else if (userAnswers[index] !== null) {
+                    $(this).addClass('answered');
+                }
+                if (markedQuestions.has(index)) {
+                    $(this).addClass('marked');
+                }
+            });
+
+            // Scroll current question into view in the palette
+            const currentPaletteItem = questionPalette.find('.question-palette-item.current');
+            if (currentPaletteItem.length) {
+                // Use scrollIntoView if supported, otherwise jQuery animate
+                if (currentPaletteItem[0].scrollIntoView) {
+                    currentPaletteItem[0].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                } else {
+                    questionPalette.animate({
+                        scrollLeft: currentPaletteItem.position().left + questionPalette.scrollLeft() - (questionPalette.width() / 2) + (currentPaletteItem.width() / 2)
+                    }, 300);
+                }
+            }
+        }
+
+        // Save Answer
+        optionsContainer.on('change', 'input[type="radio"]', function() {
+            userAnswers[currentQuestionIndex] = parseInt($(this).val());
+            updateQuestionPalette();
+        });
+
+        // Navigation Buttons
+        prevBtn.on('click', function() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        });
+
+        nextBtn.on('click', function() {
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                // If it's the last question and next is clicked, submit the test
+                submitTest();
+            }
+        });
+
+        markBtn.on('click', function() {
+            if (markedQuestions.has(currentQuestionIndex)) {
+                markedQuestions.delete(currentQuestionIndex);
+            } else {
+                markedQuestions.add(currentQuestionIndex);
+            }
+            updateQuestionPalette();
+            // Update button text immediately
+            if (markedQuestions.has(currentQuestionIndex)) {
+                markBtn.addClass('btn-info').removeClass('btn-warning').html('<i class="fas fa-bookmark me-2"></i> Unmark Review');
+            } else {
+                markBtn.addClass('btn-warning').removeClass('btn-info').html('<i class="fas fa-bookmark me-2"></i> Mark for Review');
+            }
+        });
+
+        // Timer Functionality
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.text(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
+
+                if (timeLeft <= 300 && timeLeft > 0) { // Last 5 minutes
+                    timerDisplay.addClass('text-danger');
+                } else {
+                    timerDisplay.removeClass('text-danger'); // Remove if not in last 5 minutes
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.text('00:00');
+                    // Use custom modal for time up message
+                    showCustomModal(
+                        'Time Up! (وقت ختم ہو گیا!)',
+                        '<p class="text-xl text-red-600 font-semibold">Your time for the test has ended. Your answers have been submitted automatically.</p>',
+                        '<p class="urdu-text text-xl text-red-600 font-semibold">ٹیسٹ کے لیے آپ کا وقت ختم ہو گیا ہے۔ آپ کے جوابات خود بخود جمع کر دیے گئے ہیں۔</p>',
+                        submitTest // Callback to submit the test after user closes the modal
+                    );
+                }
+            }, 1000);
+        }
+
+        // Submit Test
+        submitTestBtn.on('click', function() {
+            // Use custom modal for confirmation
+            showCustomModal(
+                'Confirm Submission (جمع کرانے کی تصدیق)',
+                '<p class="text-lg">Are you sure you want to submit the test? You cannot change answers after submission.</p>' +
+                '<p class="mt-3"><button id="confirmSubmitBtn" class="btn btn-success me-2">Yes, Submit</button><button id="cancelSubmitBtn" class="btn btn-secondary">No, Cancel</button></p>',
+                '<p class="urdu-text text-lg">کیا آپ واقعی ٹیسٹ جمع کرانا چاہتے ہیں؟ جمع کرانے کے بعد آپ جوابات تبدیل نہیں کر سکیں گے۔</p>' +
+                '<p class="urdu-text mt-3"><button id="confirmSubmitBtnUrdu" class="btn btn-success me-2">جی ہاں، جمع کرائیں</button><button id="cancelSubmitBtnUrdu" class="btn btn-secondary">نہیں، منسوخ کریں</button></p>'
+            );
+
+            // Hide the default close button for this modal
+            universalModalCloseBtn.hide();
+
+            // Set up handlers for confirmation buttons
+            $('#confirmSubmitBtn, #confirmSubmitBtnUrdu').off('click').on('click', function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button for next time
+                submitTest();
+            });
+
+            $('#cancelSubmitBtn, #cancelSubmitBtnUrdu').off('click').on('click', function() {
+                universalMessageModal.css('display', 'none'); // Hide the modal
+                universalModalCloseBtn.show(); // Show default close button for next time
+            });
+        });
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            let score = 0;
+            for (let i = 0; i < questionsData.length; i++) {
+                if (userAnswers[i] !== null && userAnswers[i] === questionsData[i].correct) {
+                    score++;
+                }
+            }
+
+            const status = score >= 50 ? 'Pass' : 'Fail';
+
+            $('#resultName').text(userName);
+            $('#resultEmail').text(userEmail);
+            $('#finalScore').text(score);
+            $('#passFailStatus').text(status === 'Pass' ? 'Congratulations! You Passed!' : 'Better luck next time! You Failed.').toggleClass('text-success', status === 'Pass').toggleClass('text-danger', status === 'Fail');
+
+            // Data to be stored in Firebase
+            const testResult = {
+                name: userName,
+                email: userEmail,
+                ipAddress: userIP, // Store user's IP address
+                score: score,
+                status: status,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Use server timestamp for accuracy
+                // You could also store userAnswers and markedQuestions for detailed review later if needed
+                // userAnswers: userAnswers,
+                // markedQuestions: Array.from(markedQuestions)
+            };
+
+            // Store data in Firestore
+            db.collection('testResults').add(testResult)
+            .then((docRef) => {
+                console.log("Document successfully written with ID:", docRef.id);
+            })
+            .catch((error) => {
+                console.error("Error writing document to Firestore:", error);
+                // Even if saving fails, we proceed to show results, but log the error
+                showCustomModal(
+                    'Submission Error (جمع کرانے میں خامی)',
+                    '<p class="text-red-600 font-semibold">There was an error saving your test result. Please inform the administrator if this persists.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">آپ کے ٹیسٹ کا نتیجہ محفوظ کرنے میں خامی پیش آئی ہے۔ اگر یہ مسئلہ برقرار رہتا ہے تو براہ کرم منتظم کو مطلع کریں۔</p>'
+                );
+            });
+
+            testSection.addClass('d-none');
+            resultSection.removeClass('d-none');
+        }
+
+        // Review Test
+        reviewTestBtn.on('click', function() {
+            resultSection.addClass('d-none');
+            reviewSection.removeClass('d-none');
+            displayReviewQuestions();
+        });
+
+        function displayReviewQuestions() {
+            $('#reviewQuestionList').empty();
+            questionsData.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const correctAnswer = q.correct;
+                const isCorrect = userAnswer === correctAnswer;
+                const isAnswered = userAnswer !== null;
+
+                let optionsHtml = '';
+                q.options.forEach((option, optIndex) => {
+                    let optionClass = 'option-text'; // Use this new class for general option text color
+                    let iconHtml = '';
+
+                    if (optIndex === correctAnswer) {
+                        optionClass = 'bg-success-light font-semibold';
+                        iconHtml = '<i class="fas fa-check ms-2"></i> (Correct Answer)';
+                    }
+                    if (isAnswered && optIndex === userAnswer && optIndex !== correctAnswer) {
+                        optionClass = 'bg-danger-light font-semibold';
+                        iconHtml = '<i class="fas fa-times ms-2"></i> (Your Answer - Incorrect)';
+                    } else if (isAnswered && optIndex === userAnswer && optIndex === correctAnswer) {
+                         optionClass = 'bg-success-light font-semibold';
+                         iconHtml = '<i class="fas fa-check ms-2"></i> (Your Answer - Correct)';
+                    }
+
+                    optionsHtml += `
+                        <p class="p-3 rounded-lg border border-gray-200 dark:border-gray-600 ${optionClass}">
+                            <span class="font-bold">${String.fromCharCode(65 + optIndex)}.</span> ${option} ${iconHtml}
+                        </p>
+                    `;
+                });
+
+                const reviewCard = `
+                    <div class="card p-5 shadow-sm mb-4">
+                        <h5 class="text-xl font-bold mb-4">Question ${index + 1} of ${questionsData.length}: ${q.question}</h5>
+                        <div class="space-y-3">
+                            ${optionsHtml}
+                        </div>
+                        <p class="mt-4 text-base text-gray-700 dark:text-gray-300">
+                            Your Selection: <span class="font-semibold">${userAnswer !== null ? q.options[userAnswer] : 'Not Answered'}</span>
+                        </p>
+                    </div>
+                `;
+                $('#reviewQuestionList').append(reviewCard);
+            });
+        }
+
+        // Print PDF Result (basic implementation)
+        printPdfBtn.on('click', function() {
+            const printContent = `
+                <div style="font-family: 'Inter', sans-serif; padding: 25px; color: #2d3748;">
+                    <h1 style="text-align: center; color: #007bff; font-size: 2.5rem; margin-bottom: 20px;">ECP BPS-17 Election Officer Mock Test Result</h1>
+                    <hr style="border: 1px solid #e2e8f0; margin: 30px 0;">
+                    <p style="font-size: 1.15rem; margin-bottom: 10px;"><strong>Name:</strong> ${userName}</p>
+                    <p style="font-size: 1.15rem; margin-bottom: 10px;"><strong>Email:</strong> ${userEmail}</p>
+                    <p style="font-size: 1.5rem; margin-bottom: 20px; font-weight: bold;">Your Score: <span style="color: #28a745;">${$('#finalScore').text()}</span> / 100</p>
+                    <p style="font-size: 1.8rem; font-weight: bold; margin-bottom: 30px; color: ${$('#passFailStatus').hasClass('text-success') ? '#28a745' : '#dc3545'};">${$('#passFailStatus').text()}</p>
+                    <hr style="border: 1px solid #e2e8f0; margin: 30px 0;">
+                    <h2 style="color: #007bff; font-size: 2rem; margin-bottom: 25px;">Detailed Review of Questions</h2>
+                    <div class="review-question-list-print">
+                        ${questionsData.map((q, index) => {
+                            const userAnswer = userAnswers[index];
+                            const correctAnswer = q.correct;
+                            const isCorrect = userAnswer === correctAnswer;
+                            const isAnswered = userAnswer !== null;
+
+                            let optionsHtml = '';
+                            q.options.forEach((option, optIndex) => {
+                                let optionStyle = 'padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: #2d3748;'; // Added color for print
+                                let iconHtml = '';
+
+                                if (optIndex === correctAnswer) {
+                                    optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
+                                    iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Correct Answer)';
+                                }
+                                if (isAnswered && optIndex === userAnswer && optIndex !== correctAnswer) {
+                                    optionStyle += 'background-color: #f8d7da; color: #dc3545; border-color: #dc3545;';
+                                    iconHtml = '<i class="fas fa-times" style="color:#dc3545; margin-left: 8px;"></i> (Your Answer - Incorrect)';
+                                } else if (isAnswered && optIndex === userAnswer && optIndex === correctAnswer) {
+                                     optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
+                                     iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Your Answer - Correct)';
+                                }
+
+                                optionsHtml += `
+                                    <p style="${optionStyle}">
+                                        <strong style="margin-right: 5px;">${String.fromCharCode(65 + optIndex)}.</strong> ${option} ${iconHtml}
+                                    </p>
+                                `;
+                            }).join('');
+
+                            return `
+                                <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                                    <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 15px;">Question ${index + 1} of ${questionsData.length}: ${q.question}</h5>
+                                    <div style="margin-bottom: 15px;">
+                                        ${optionsHtml}
+                                    </div>
+                                    <p style="font-size: 0.95rem; color: #4a5568;">
+                                        Your Selection: <strong style="font-weight: 600;">${userAnswer !== null ? q.options[userAnswer] : 'Not Answered'}</strong>
+                                    </p>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            const printWindow = window.open('', '', 'height=800,width=1000');
+            printWindow.document.write('<html><head><title>Test Result PDF</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
+                body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; line-height: 1.6; color: #2d3748; }
+                h1, h2, h5 { margin-top: 0; }
+                p { margin-bottom: 0.5rem; }
+                strong { font-weight: 700; }
+                .text-success { color: #28a745; }
+                .text-danger { color: #dc3545; }
+            `);
+            printWindow.document.write('</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        });
+
+
+        // Back to Result from Review
+        backToResultBtn.on('click', function() {
+            reviewSection.addClass('d-none');
+            resultSection.removeClass('d-none');
+        });
+    </script>
+</body>
+</html>
