@@ -48,8 +48,20 @@
             color: var(--dark-text);
         }
 
+        /* Modified container-fluid for better spacing */
         .container-fluid {
             flex: 1;
+            max-width: 1200px; /* Set a maximum width */
+            margin-left: auto; /* Center the container */
+            margin-right: auto; /* Center the container */
+            padding-left: 2rem; /* Add horizontal padding */
+            padding-right: 2rem; /* Add horizontal padding */
+        }
+
+        /* Adjust main padding */
+        main.container-fluid {
+            padding-top: 3rem; /* Increase top padding */
+            padding-bottom: 3rem; /* Increase bottom padding */
         }
 
         /* Header & Footer */
@@ -629,6 +641,11 @@
             .urdu-text {
                 font-size: 1rem;
             }
+            /* Adjust container-fluid for smaller screens */
+            .container-fluid {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -761,7 +778,10 @@
 
     <footer class="footer mt-auto">
         <div class="container-fluid text-center text-sm py-3">
-            <p class="mb-0">&copy; 2024 ECP Mock Test. All rights reserved. Designed by ❤️ with <a href="https://mock-test-hub.netlify.app">Mock Test Hub </a></p>
+           <p class="mb-0">&copy; 2024 ECP Mock Test. All rights reserved. Designed by ❤️ with <a href="https://mock-test-hub.netlify.app">Mock Test Hub </a></p>
+        </div>
+    </footer>
+
         </div>
     </footer>
 
@@ -1367,6 +1387,49 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
 
         // Print PDF Result (basic implementation)
         printPdfBtn.on('click', function() {
+            // Generate options HTML for print content
+            const questionsHtmlForPrint = questionsData.map((q, index) => {
+                const userAnswer = userAnswers[index];
+                const correctAnswer = q.correct;
+                const isCorrect = userAnswer === correctAnswer;
+                const isAnswered = userAnswer !== null;
+
+                const optionsHtml = q.options.map((option, optIndex) => {
+                    let optionStyle = 'padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: #2d3748;';
+                    let iconHtml = '';
+
+                    if (optIndex === correctAnswer) {
+                        optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
+                        iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Correct Answer)';
+                    }
+                    if (isAnswered && optIndex === userAnswer && optIndex !== correctAnswer) {
+                        optionStyle += 'background-color: #f8d7da; color: #dc3545; border-color: #dc3545;';
+                        iconHtml = '<i class="fas fa-times" style="color:#dc3545; margin-left: 8px;"></i> (Your Answer - Incorrect)';
+                    } else if (isAnswered && optIndex === userAnswer && optIndex === correctAnswer) {
+                         optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
+                         iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Your Answer - Correct)';
+                    }
+
+                    return `
+                        <p style="${optionStyle}">
+                            <strong style="margin-right: 5px;">${String.fromCharCode(65 + optIndex)}.</strong> ${option} ${iconHtml}
+                        </p>
+                    `;
+                }).join(''); // Correctly join the mapped options
+
+                return `
+                    <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 15px;">Question ${index + 1} of ${questionsData.length}: ${q.question}</h5>
+                        <div style="margin-bottom: 15px;">
+                            ${optionsHtml}
+                        </div>
+                        <p style="font-size: 0.95rem; color: #4a5568;">
+                            Your Selection: <strong style="font-weight: 600;">${userAnswer !== null ? q.options[userAnswer] : 'Not Answered'}</strong>
+                        </p>
+                    </div>
+                `;
+            }).join(''); // Join all question cards
+
             const printContent = `
                 <div style="font-family: 'Inter', sans-serif; padding: 25px; color: #2d3748;">
                     <h1 style="text-align: center; color: #007bff; font-size: 2.5rem; margin-bottom: 20px;">ECP BPS-17 Election Officer Mock Test Result</h1>
@@ -1378,53 +1441,21 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
                     <hr style="border: 1px solid #e2e8f0; margin: 30px 0;">
                     <h2 style="color: #007bff; font-size: 2rem; margin-bottom: 25px;">Detailed Review of Questions</h2>
                     <div class="review-question-list-print">
-                        ${questionsData.map((q, index) => {
-                            const userAnswer = userAnswers[index];
-                            const correctAnswer = q.correct;
-                            const isCorrect = userAnswer === correctAnswer;
-                            const isAnswered = userAnswer !== null;
-
-                            let optionsHtml = '';
-                            q.options.forEach((option, optIndex) => {
-                                let optionStyle = 'padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: #2d3748;';
-                                let iconHtml = '';
-
-                                if (optIndex === correctAnswer) {
-                                    optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
-                                    iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Correct Answer)';
-                                }
-                                if (isAnswered && optIndex === userAnswer && optIndex !== correctAnswer) {
-                                    optionStyle += 'background-color: #f8d7da; color: #dc3545; border-color: #dc3545;';
-                                    iconHtml = '<i class="fas fa-times" style="color:#dc3545; margin-left: 8px;"></i> (Your Answer - Incorrect)';
-                                } else if (isAnswered && optIndex === userAnswer && optIndex === correctAnswer) {
-                                     optionStyle += 'background-color: #d4edda; color: #28a745; border-color: #28a745;';
-                                     iconHtml = '<i class="fas fa-check" style="color:#28a745; margin-left: 8px;"></i> (Your Answer - Correct)';
-                                }
-
-                                optionsHtml += `
-                                    <p style="${optionStyle}">
-                                        <strong style="margin-right: 5px;">${String.fromCharCode(65 + optIndex)}.</strong> ${option} ${iconHtml}
-                                    </p>
-                                `;
-                            }).join('');
-
-                            return `
-                                <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                                    <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 15px;">Question ${index + 1} of ${questionsData.length}: ${q.question}</h5>
-                                    <div style="margin-bottom: 15px;">
-                                        ${optionsHtml}
-                                    </div>
-                                    <p style="font-size: 0.95rem; color: #4a5568;">
-                                        Your Selection: <strong style="font-weight: 600;">${userAnswer !== null ? q.options[userAnswer] : 'Not Answered'}</strong>
-                                    </p>
-                                </div>
-                            `;
-                        }).join('')}
+                        ${questionsHtmlForPrint}
                     </div>
                 </div>
             `;
 
-            const printWindow = window.open('', '', 'height=800,width=1000');
+            const printWindow = window.open('', '_blank', 'height=800,width=1000');
+            if (!printWindow) {
+                showCustomModal(
+                    'Print Blocked (پرنٹ بلاک ہو گیا)',
+                    '<p class="text-red-600 font-semibold">Your browser may have blocked the print window. Please allow pop-ups for this site and try again.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">آپ کے براؤزر نے پرنٹ ونڈو کو بلاک کر دیا ہو گا۔ براہ کرم اس سائٹ کے لیے پاپ اپس کی اجازت دیں اور دوبارہ کوشش کریں۔</p>'
+                );
+                return;
+            }
+
             printWindow.document.write('<html><head><title>Test Result PDF</title>');
             printWindow.document.write('<style>');
             printWindow.document.write(`
@@ -1439,7 +1470,11 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
             printWindow.document.write('</head><body>');
             printWindow.document.write(printContent);
             printWindow.document.close();
-            printWindow.print();
+
+            // Add a small delay before printing to ensure content is rendered
+            setTimeout(() => {
+                printWindow.print();
+            }, 500); // 500ms delay
         });
 
 
