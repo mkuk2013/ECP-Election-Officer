@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECP BPS-17 Election Officer Mock Test</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.backendless.com/sdk/js/latest/backendless.min.js"></script>
     <style>
         /* Base Colors & Variables */
         :root {
@@ -782,31 +783,20 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Backendless JavaScript SDK -->
+<script src="
+https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
+"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script>
-        // --- Firebase Configuration (REPLACE WITH YOUR ACTUAL CONFIG) ---
-         const firebaseConfig = {
-    apiKey: "AIzaSyARioi_SsJ036uPaozAffshFwo0BEIVGls",
-    authDomain: "ecp-mocktest.firebaseapp.com",
-    projectId: "ecp-mocktest",
-    storageBucket: "ecp-mocktest.firebasestorage.app",
-    messagingSenderId: "93126984229",
-    appId: "1:93126984229:web:80f32bcfd73b7ded74b5cc",
-    measurementId: "G-Y2XKSLJH2F"
-  };
+        // Backendless Initialization
+        // IMPORTANT: Replace 'YOUR_BACKENDLESS_APPLICATION_ID' and 'YOUR_BACKENDLESS_JAVASCRIPT_API_KEY' with your actual keys
+        const APP_ID = '6F7630D1-5FC2-4A02-8994-596DA9CC2F90';
+        const API_KEY = 'C5D12E09-C50E-4788-8D47-12D855189C5C';
 
-
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to the Firestore service
-        const db = firebase.firestore();
-        // --- End Firebase Configuration ---
+        Backendless.initApp(APP_ID, API_KEY);
 
         const questionsData = [
             // Section 1: English (Questions 1-30)
@@ -899,7 +889,8 @@
             { section: "Current Affairs", question: "Pakistan recently signed a major economic project with China known as:", options: ["CPEC", "TAPI", "IPI", "CASA-1000"], correct: 0 },
             { section: "Current Affairs", question: "The 2024 Summer Olympics are scheduled to be held in:", options: ["Tokyo", "Los Angeles", "Paris", "London"], correct: 2 },
             { section: "Current Affairs", question: "Which international organization is primarily responsible for maintaining international peace and security?", options: ["World Bank", "International Monetary Fund (IMF)", "World Health Organization (WHO)", "United Nations (UN)"], correct: 3 },
-            { section: "Current Affairs", question: "Who is the current Chief Justice of Pakistan?", options: ["Justice Qazi Faez Isa", "Justice Umar Ata Bandial", "Justice Gulzar Ahmed", "Justice Asif Saeed Khosa"], correct: 0 },
+            { section: "Current Affairs", question: "Who is the current Chief Justice of Pakistan?", 
+            options: ["Yahya Afridi", "Justice Umar Ata Bandial", "Justice Gulzar Ahmed", "Justice Asif Saeed Khosa"], correct: 0 },
             { section: "Current Affairs", question: "The group of major emerging economies known as BRICS includes Brazil, Russia, India, China, and:", options: ["South Korea", "South Africa", "Saudi Arabia", "Singapore"], correct: 1 },
             { section: "Current Affairs", question: "The headquarters of the South Asian Association for Regional Cooperation (SAARC) is located in:", options: ["New Delhi, India", "Islamabad, Pakistan", "Kathmandu, Nepal", "Colombo, Sri Lanka"], correct: 2 },
             { section: "Current Affairs", question: "Pakistan conducted its 7th Population and Housing Census in the year:", options: ["2017", "2020", "2022", "2023"], correct: 3 },
@@ -930,11 +921,11 @@
         const testSection = $('#testSection');
         const resultSection = $('#resultSection');
         const reviewSection = $('#reviewSection');
-        const universalMessageModal = $('#universalMessageModal'); // Changed from instructionsModal
+        const universalMessageModal = $('#universalMessageModal');
         const universalModalTitle = $('#universalModalTitle');
         const universalModalBody = $('#universalModalBody');
         const universalModalUrduBody = $('#universalModalUrduBody');
-        const universalModalCloseBtn = $('#universalModalCloseBtn'); // Button to close the new modal
+        const universalModalCloseBtn = $('#universalModalCloseBtn');
 
         const questionNumberSpan = $('#questionNumber');
         const questionText = $('#questionText');
@@ -950,7 +941,6 @@
         const reviewTestBtn = $('#reviewTestBtn');
         const printPdfBtn = $('#printPdfBtn');
         const backToResultBtn = $('#backToResultBtn');
-        // Removed agreeToInstructionsBtn as its functionality is now handled by universalModalCloseBtn for the initial instructions
 
         const themeToggle = $('#themeToggle');
         const themeIcon = $('#themeIcon');
@@ -959,10 +949,9 @@
         function showCustomModal(title, messageEnglish, messageUrdu, onCloseCallback = null) {
             universalModalTitle.text(title);
             universalModalBody.html(messageEnglish);
-            universalModalUrduBody.html(messageUrdu); // Use html() for potential bolding or formatting
+            universalModalUrduBody.html(messageUrdu);
             universalMessageModal.css('display', 'flex');
 
-            // Set up close button handler
             universalModalCloseBtn.off('click').on('click', function() {
                 universalMessageModal.css('display', 'none');
                 if (onCloseCallback) {
@@ -986,8 +975,6 @@
         // Function to get user's IP address
         async function getUserIP() {
             try {
-                // Using a third-party service to get IP. Note: this might be rate-limited or blocked.
-                // For a more robust solution, you'd need a backend to fetch the IP.
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
                 userIP = data.ip;
@@ -1004,7 +991,7 @@
             showCustomModal(
                 'Test Instructions (ہدایات براۓ امتحان)',
                 `
-                    <p>This is a <b>free Mock Test</b> that can only be attempted <b>once</b>. You will be prevented from re-attempting the test. Thank you for your cooperation.</p>
+                    <p>This is a <b>free Mock Test</b> that can only be attempted <b>once</b> per email and IP address. Thank you for your cooperation.</p>
                     <hr class="my-4">
                     <h5 class="text-xl font-semibold mb-3">Important Guidelines:</h5>
                     <ul class="text-start list-decimal pl-5">
@@ -1018,16 +1005,12 @@
                     </ul>
                 `,
                 `
-                    یہ ایک مفت Mock Test ہے جو صرف **ایک بار** دیا جا سکتا ہے۔ دوبارہ کوشش کرنے سے آپ کو روکا جائے گا۔ آپ کے تعاون کا شکریہ۔
+                    یہ ایک مفت Mock Test ہے جو صرف **ایک بار** فی ای میل اور آئی پی ایڈریس دیا جا سکتا ہے۔ آپ کے تعاون کا شکریہ۔
                 `,
                 function() {
                     userInfoSection.removeClass('d-none'); // Show user info form after initial instructions
                 }
             );
-            // Rename the button text for the universal modal from "Agree to Instructions" to "Close" initially,
-            // or better yet, dynamically set it based on the modal's purpose.
-            // For the initial instructions, you might still want "I Have Read the Instructions".
-            // Let's modify the showCustomModal to accept button text too.
             universalModalCloseBtn.text('I Have Read the Instructions (میں نے ہدایات پڑھ لی ہیں)');
         });
 
@@ -1039,7 +1022,6 @@
             userEmail = $('#userEmail').val().trim().toLowerCase();
 
             if (!userName || !userEmail) {
-                // Use custom modal for this alert as well
                 showCustomModal(
                     'Missing Information (معلومات نامکمل)',
                     '<p class="text-red-600 font-semibold">Please enter your full name and email address to start the test.</p>',
@@ -1048,38 +1030,25 @@
                 return;
             }
 
-            // Check if user has already taken the test by email or IP
-            const emailQuery = db.collection('testResults').where('email', '==', userEmail);
-            const ipQuery = db.collection('testResults').where('ipAddress', '==', userIP);
-
-            const [emailSnapshot, ipSnapshot] = await Promise.all([emailQuery.get(), ipQuery.get()]);
-
-            let alreadyAttempted = false;
-            let messageEnglish = '';
-            let messageUrdu = '';
-
-            if (!emailSnapshot.empty) {
-                alreadyAttempted = true;
-                messageEnglish = `<p class="text-red-600 font-semibold">This email address (<b>${userEmail}</b>) has already been used to attempt the test. Each user is allowed only <b>one attempt</b>.</p>`;
-                messageUrdu = `<p class="urdu-text text-red-600 font-semibold">یہ ای میل ایڈریس (<b>${userEmail}</b>) پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔ ہر صارف کو صرف **ایک بار** ٹیسٹ دینے کی اجازت ہے۔</p>`;
-            } else if (userIP !== 'unavailable' && !ipSnapshot.empty) {
-                alreadyAttempted = true;
-                messageEnglish = `<p class="text-red-600 font-semibold">It appears this device/IP address (<b>${userIP}</b>) has already been used to attempt the test. Each user is allowed only <b>one attempt</b>.</p>`;
-                messageUrdu = `<p class="urdu-text text-red-600 font-semibold">لگتا ہے کہ یہ ڈیوائس/آئی پی ایڈریس (<b>${userIP}</b>) پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔ ہر صارف کو صرف **ایک بار** ٹیسٹ دینے کی اجازت ہے۔</p>`;
-            }
-
-            if (alreadyAttempted) {
+            // Simple client-side validation before starting test
+            if (!userEmail.includes('@') || !userEmail.includes('.')) {
                 showCustomModal(
-                    'Test Already Attempted (ٹیسٹ پہلے ہی دیا جا چکا ہے)',
-                    messageEnglish,
-                    messageUrdu
+                    'Invalid Email (غلط ای میل)',
+                    '<p class="text-red-600 font-semibold">Please enter a valid email address to continue.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">براہ کرم درست ای میل ایڈریس درج کریں۔</p>'
                 );
-                // After showing the modal, we don't proceed to start the test.
-                // The form remains visible, and the user needs to correct their input or understand why they're blocked.
                 return;
             }
 
-            // If checks pass, start the test
+            if (userIP === 'unavailable') {
+                showCustomModal(
+                    'IP Detection Failed (آئی پی کا پتہ لگانے میں ناکامی)',
+                    '<p class="text-red-600 font-semibold">Could not detect your IP address. Please ensure you have internet connection.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">آپ کے آئی پی ایڈریس کا پتہ لگانے میں ناکامی۔ براہ کرم انٹرنیٹ کنکشن کی تصدیق کریں۔</p>'
+                );
+                return;
+            }
+
             userInfoSection.addClass('d-none');
             testSection.removeClass('d-none');
             startTest();
@@ -1162,7 +1131,6 @@
             // Scroll current question into view in the palette
             const currentPaletteItem = questionPalette.find('.question-palette-item.current');
             if (currentPaletteItem.length) {
-                // Use scrollIntoView if supported, otherwise jQuery animate
                 if (currentPaletteItem[0].scrollIntoView) {
                     currentPaletteItem[0].scrollIntoView({ behavior: 'smooth', inline: 'center' });
                 } else {
@@ -1223,18 +1191,17 @@
                 if (timeLeft <= 300 && timeLeft > 0) { // Last 5 minutes
                     timerDisplay.addClass('text-danger');
                 } else {
-                    timerDisplay.removeClass('text-danger'); // Remove if not in last 5 minutes
+                    timerDisplay.removeClass('text-danger');
                 }
 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     timerDisplay.text('00:00');
-                    // Use custom modal for time up message
                     showCustomModal(
                         'Time Up! (وقت ختم ہو گیا!)',
                         '<p class="text-xl text-red-600 font-semibold">Your time for the test has ended. Your answers have been submitted automatically.</p>',
                         '<p class="urdu-text text-xl text-red-600 font-semibold">ٹیسٹ کے لیے آپ کا وقت ختم ہو گیا ہے۔ آپ کے جوابات خود بخود جمع کر دیے گئے ہیں۔</p>',
-                        submitTest // Callback to submit the test after user closes the modal
+                        submitTest
                     );
                 }
             }, 1000);
@@ -1242,7 +1209,6 @@
 
         // Submit Test
         submitTestBtn.on('click', function() {
-            // Use custom modal for confirmation
             showCustomModal(
                 'Confirm Submission (جمع کرانے کی تصدیق)',
                 '<p class="text-lg">Are you sure you want to submit the test? You cannot change answers after submission.</p>' +
@@ -1251,19 +1217,17 @@
                 '<p class="urdu-text mt-3"><button id="confirmSubmitBtnUrdu" class="btn btn-success me-2">جی ہاں، جمع کرائیں</button><button id="cancelSubmitBtnUrdu" class="btn btn-secondary">نہیں، منسوخ کریں</button></p>'
             );
 
-            // Hide the default close button for this modal
             universalModalCloseBtn.hide();
 
-            // Set up handlers for confirmation buttons
             $('#confirmSubmitBtn, #confirmSubmitBtnUrdu').off('click').on('click', function() {
-                universalMessageModal.css('display', 'none'); // Hide the modal
-                universalModalCloseBtn.show(); // Show default close button for next time
+                universalMessageModal.css('display', 'none');
+                universalModalCloseBtn.show();
                 submitTest();
             });
 
             $('#cancelSubmitBtn, #cancelSubmitBtnUrdu').off('click').on('click', function() {
-                universalMessageModal.css('display', 'none'); // Hide the modal
-                universalModalCloseBtn.show(); // Show default close button for next time
+                universalMessageModal.css('display', 'none');
+                universalModalCloseBtn.show();
             });
         });
 
@@ -1283,36 +1247,67 @@
             $('#finalScore').text(score);
             $('#passFailStatus').text(status === 'Pass' ? 'Congratulations! You Passed!' : 'Better luck next time! You Failed.').toggleClass('text-success', status === 'Pass').toggleClass('text-danger', status === 'Fail');
 
-            // Data to be stored in Firebase
+            // Data to be sent to Backendless
             const testResult = {
+                timestamp: new Date().toISOString(), // Use ISO string for better date handling in Backendless
                 name: userName,
                 email: userEmail,
-                ipAddress: userIP, // Store user's IP address
+                totalQuestions: questionsData.length,
+                correctAnswers: score,
+                incorrectAnswers: questionsData.length - score,
+                unanswered: userAnswers.filter(answer => answer === null).length,
                 score: score,
                 status: status,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Use server timestamp for accuracy
-                // You could also store userAnswers and markedQuestions for detailed review later if needed
-                // userAnswers: userAnswers,
-                // markedQuestions: Array.from(markedQuestions)
+                ipAddress: userIP
             };
 
-            // Store data in Firestore
-            db.collection('testResults').add(testResult)
-            .then((docRef) => {
-                console.log("Document successfully written with ID:", docRef.id);
-            })
-            .catch((error) => {
-                console.error("Error writing document to Firestore:", error);
-                // Even if saving fails, we proceed to show results, but log the error
-                showCustomModal(
-                    'Submission Error (جمع کرانے میں خامی)',
-                    '<p class="text-red-600 font-semibold">There was an error saving your test result. Please inform the administrator if this persists.</p>',
-                    '<p class="urdu-text text-red-600 font-semibold">آپ کے ٹیسٹ کا نتیجہ محفوظ کرنے میں خامی پیش آئی ہے۔ اگر یہ مسئلہ برقرار رہتا ہے تو براہ کرم منتظم کو مطلع کریں۔</p>'
-                );
-            });
+            // First, check for duplicate entries in Backendless
+            const dataStore = Backendless.Data.of('TestResults'); // Assuming 'TestResults' is your table name in Backendless
+            const queryBuilder = Backendless.DataQueryBuilder.create();
+            queryBuilder.setWhereClause(`email = '${userEmail}' OR ipAddress = '${userIP}'`);
 
-            testSection.addClass('d-none');
-            resultSection.removeClass('d-none');
+            dataStore.find(queryBuilder)
+                .then(function(existingResults) {
+                    if (existingResults && existingResults.length > 0) {
+                        // Duplicate found
+                        showCustomModal(
+                            'Test Attempted (ٹیسٹ پہلے ہی دیا جا چکا ہے)',
+                            `<p class="text-red-600 font-semibold">This email or IP address has already been used to attempt the test.</p>`,
+                            `<p class="urdu-text text-red-600 font-semibold">یہ ای میل یا آئی پی ایڈریس پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔</p>`
+                        );
+                        // Still show the result section even if it's a duplicate attempt
+                        testSection.addClass('d-none');
+                        resultSection.removeClass('d-none');
+                    } else {
+                        // No duplicate, save the new result
+                        dataStore.save(testResult)
+                            .then(function(savedObject) {
+                                console.log("Test result saved to Backendless:", savedObject);
+                                testSection.addClass('d-none');
+                                resultSection.removeClass('d-none');
+                            })
+                            .catch(function(error) {
+                                console.error("Error saving test result to Backendless:", error);
+                                showCustomModal(
+                                    'Submission Error (جمع کرانے میں خامی)',
+                                    `<p class="text-red-600 font-semibold">Failed to save your test result: ${error.message}</p>`,
+                                    `<p class="urdu-text text-red-600 font-semibold">آپ کے ٹیسٹ کا نتیجہ محفوظ کرنے میں خامی پیش آئی</p>`
+                                );
+                                testSection.addClass('d-none');
+                                resultSection.removeClass('d-none'); // Still transition to result even on save error
+                            });
+                    }
+                })
+                .catch(function(error) {
+                    console.error("Error checking for duplicate test results in Backendless:", error);
+                    showCustomModal(
+                        'Connection Error (کنکشن کی خامی)',
+                        '<p class="text-red-600 font-semibold">Network error occurred while checking for previous attempts. Please check your internet connection and try again.</p>',
+                        '<p class="urdu-text text-red-600 font-semibold">نیٹ ورک خرابی ہوئی ہے۔ انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔</p>'
+                    );
+                    testSection.addClass('d-none');
+                    resultSection.removeClass('d-none'); // Still transition to result even on check error
+                });
         }
 
         // Review Test
@@ -1332,7 +1327,7 @@
 
                 let optionsHtml = '';
                 q.options.forEach((option, optIndex) => {
-                    let optionClass = 'option-text'; // Use this new class for general option text color
+                    let optionClass = 'option-text';
                     let iconHtml = '';
 
                     if (optIndex === correctAnswer) {
@@ -1390,7 +1385,7 @@
 
                             let optionsHtml = '';
                             q.options.forEach((option, optIndex) => {
-                                let optionStyle = 'padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: #2d3748;'; // Added color for print
+                                let optionStyle = 'padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: #2d3748;';
                                 let iconHtml = '';
 
                                 if (optIndex === correctAnswer) {
