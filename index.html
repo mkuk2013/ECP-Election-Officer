@@ -1040,6 +1040,9 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
                 return;
             }
 
+            // Ensure IP is fetched before proceeding
+            await getUserIP(); // Call getUserIP here to ensure userIP is populated
+
             if (userIP === 'unavailable') {
                 showCustomModal(
                     'IP Detection Failed (آئی پی کا پتہ لگانے میں ناکامی)',
@@ -1049,6 +1052,33 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
                 return;
             }
 
+            // Check for duplicate entries in Backendless BEFORE starting the test
+            const dataStore = Backendless.Data.of('TestResults');
+            const queryBuilder = Backendless.DataQueryBuilder.create();
+            queryBuilder.setWhereClause(`email = '${userEmail}' OR ipAddress = '${userIP}'`);
+
+            try {
+                const existingResults = await dataStore.find(queryBuilder);
+                if (existingResults && existingResults.length > 0) {
+                    // Duplicate found, prevent test from starting
+                    showCustomModal(
+                        'Test Already Attempted (ٹیسٹ پہلے ہی دیا جا چکا ہے)',
+                        `<p class="text-red-600 font-semibold">This email or IP address has already been used to attempt the test. You can only attempt the test once.</p>`,
+                        `<p class="urdu-text text-red-600 font-semibold">یہ ای میل یا آئی پی ایڈریس پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔ آپ صرف ایک بار ٹیسٹ دے سکتے ہیں۔</p>`
+                    );
+                    return; // Stop execution if duplicate is found
+                }
+            } catch (error) {
+                console.error("Error checking for duplicate test results in Backendless:", error);
+                showCustomModal(
+                    'Connection Error (کنکشن کی خامی)',
+                    '<p class="text-red-600 font-semibold">Network error occurred while checking for previous attempts. Please check your internet connection and try again.</p>',
+                    '<p class="urdu-text text-red-600 font-semibold">نیٹ ورک خرابی ہوئی ہے۔ انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔</p>'
+                );
+                return; // Stop execution on network error
+            }
+
+            // If no duplicates and all checks pass, proceed to start the test
             userInfoSection.addClass('d-none');
             testSection.removeClass('d-none');
             startTest();
@@ -1261,52 +1291,23 @@ https://cdn.jsdelivr.net/npm/backendless@7.4.7/dist/backendless.min.js
                 ipAddress: userIP
             };
 
-            // First, check for duplicate entries in Backendless
+            // Save the new result (duplicate check already happened at start)
             const dataStore = Backendless.Data.of('TestResults'); // Assuming 'TestResults' is your table name in Backendless
-            const queryBuilder = Backendless.DataQueryBuilder.create();
-            queryBuilder.setWhereClause(`email = '${userEmail}' OR ipAddress = '${userIP}'`);
-
-            dataStore.find(queryBuilder)
-                .then(function(existingResults) {
-                    if (existingResults && existingResults.length > 0) {
-                        // Duplicate found
-                        showCustomModal(
-                            'Test Attempted (ٹیسٹ پہلے ہی دیا جا چکا ہے)',
-                            `<p class="text-red-600 font-semibold">This email or IP address has already been used to attempt the test.</p>`,
-                            `<p class="urdu-text text-red-600 font-semibold">یہ ای میل یا آئی پی ایڈریس پہلے ہی ٹیسٹ کے لیے استعمال ہو چکا ہے۔</p>`
-                        );
-                        // Still show the result section even if it's a duplicate attempt
-                        testSection.addClass('d-none');
-                        resultSection.removeClass('d-none');
-                    } else {
-                        // No duplicate, save the new result
-                        dataStore.save(testResult)
-                            .then(function(savedObject) {
-                                console.log("Test result saved to Backendless:", savedObject);
-                                testSection.addClass('d-none');
-                                resultSection.removeClass('d-none');
-                            })
-                            .catch(function(error) {
-                                console.error("Error saving test result to Backendless:", error);
-                                showCustomModal(
-                                    'Submission Error (جمع کرانے میں خامی)',
-                                    `<p class="text-red-600 font-semibold">Failed to save your test result: ${error.message}</p>`,
-                                    `<p class="urdu-text text-red-600 font-semibold">آپ کے ٹیسٹ کا نتیجہ محفوظ کرنے میں خامی پیش آئی</p>`
-                                );
-                                testSection.addClass('d-none');
-                                resultSection.removeClass('d-none'); // Still transition to result even on save error
-                            });
-                    }
+            dataStore.save(testResult)
+                .then(function(savedObject) {
+                    console.log("Test result saved to Backendless:", savedObject);
+                    testSection.addClass('d-none');
+                    resultSection.removeClass('d-none');
                 })
                 .catch(function(error) {
-                    console.error("Error checking for duplicate test results in Backendless:", error);
+                    console.error("Error saving test result to Backendless:", error);
                     showCustomModal(
-                        'Connection Error (کنکشن کی خامی)',
-                        '<p class="text-red-600 font-semibold">Network error occurred while checking for previous attempts. Please check your internet connection and try again.</p>',
-                        '<p class="urdu-text text-red-600 font-semibold">نیٹ ورک خرابی ہوئی ہے۔ انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔</p>'
+                        'Submission Error (جمع کرانے میں خامی)',
+                        `<p class="text-red-600 font-semibold">Failed to save your test result: ${error.message}</p>`,
+                        `<p class="urdu-text text-red-600 font-semibold">آپ کے ٹیسٹ کا نتیجہ محفوظ کرنے میں خامی پیش آئی</p>`
                     );
                     testSection.addClass('d-none');
-                    resultSection.removeClass('d-none'); // Still transition to result even on check error
+                    resultSection.removeClass('d-none'); // Still transition to result even on save error
                 });
         }
 
